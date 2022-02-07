@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(main2shoppingLists);
                 }
                 else {
-                    throw new IllegalStateException("Unexpected value: " + view.getId());
+                    throw new IllegalStateException(getString(string.Unexpected_val) + view.getId());
                 }
             }
         };
