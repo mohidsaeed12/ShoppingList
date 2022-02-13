@@ -1,8 +1,10 @@
 package com.example.shoppinglist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Button;
 
 public class CategoriesActivity extends AppCompatActivity {
 
