@@ -20,6 +20,9 @@ public class shoppingListsTbl {
         this.lists = lists;
     }
 
-    @ColumnInfo(name="item")
+    @ColumnInfo(name="item_name")
     public String item;
+
+    @ColumnInfo(name="obtained")
+    public boolean itemObtained;
 }
