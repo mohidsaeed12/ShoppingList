@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +18,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private static final String TAG = "CustomAdapter";
 
     // Lists of the list names and dates created
-    private ArrayList<String> names;
-    private ArrayList<String> dates;
-    private Context context;
+    private final ArrayList<List> lists;
+    private final Context context;
 
     // Our adapter constructor
-    public CustomAdapter(Context context, ArrayList<String> names, ArrayList<String> dates) {
-        this.names = names;
-        this.dates = dates;
+    public CustomAdapter(Context context, ArrayList<List> lists) {
+        this.lists = lists;
         this.context = context;
     }
 
@@ -34,21 +31,20 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     // Creates the view holder. Not too sure how it works but tutorial and docs have this.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listitem, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_lists, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     // Called every time something new is added to the recycler
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called.");
-        holder.listName.setText(names.get(position));
-        holder.dateAdded.setText(dates.get(position));
+        holder.listName.setText(lists.get(position).getName());
+        holder.dateAdded.setText(lists.get(position).getDate());
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, names.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, lists.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -56,7 +52,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     // This just gets the size of the list
     public int getItemCount() {
-        return names.size();
+        return lists.size();
     }
 
     // ViewHolder Class that is what each item is made of in the recycler.
