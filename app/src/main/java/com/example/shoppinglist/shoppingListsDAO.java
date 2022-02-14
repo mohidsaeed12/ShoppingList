@@ -37,21 +37,21 @@ public interface shoppingListsDAO {
     @Delete
     void delete(shoppingListsTbl shoppingList);
 
-    @Query("SELECT DISTINCT list_names FROM shoppingListsTbl")
+    @Query("SELECT DISTINCT list_name FROM shoppingListsTbl")
     List<String> shoppingListNames();
 
     // Lists intersection of items with a single shopping list
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT itemsTbl.category,itemsTbl.item_name "+
             "FROM itemsTbl INNER JOIN shoppingListsTbl ON shoppingListsTbl.item_name=itemsTbl.item_name "+
-            "WHERE shoppingListsTbl.list_names LIKE :selectList")
+            "WHERE shoppingListsTbl.list_name LIKE :selectList")
     List<category_item_tuple> itemsByList(String selectList);
 
     // Lists items at the intersection of a shopping list and a category
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT shoppingListsTbl.item_name, shoppingListsTbl.obtained "+
             "FROM shoppingListsTbl INNER JOIN itemsTbl ON shoppingListsTbl.item_name=itemsTbl.item_name "+
-            "WHERE shoppingListsTbl.list_names LIKE :selectList "+
+            "WHERE shoppingListsTbl.list_name LIKE :selectList "+
             "AND itemsTbl.category LIKE :selectCategory "+
             "ORDER BY shoppingListsTbl.obtained")
     List<item_obtained_tuple> itemsByListAndCategory(String selectList, String selectCategory);

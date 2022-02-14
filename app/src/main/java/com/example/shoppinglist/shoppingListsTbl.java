@@ -1,28 +1,19 @@
 package com.example.shoppinglist;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(primaryKeys={"list_name", "item_name"})
 public class shoppingListsTbl {
-    @PrimaryKey
-    public int id;
 
-    @ColumnInfo(name="list_names")
-    private String lists;
+    @ColumnInfo(name="list_name")   @NonNull public String lists;
+    @ColumnInfo(name="item_name")   @NonNull public String item;
+    @ColumnInfo(name="obtained")    public boolean itemObtained;
 
-    public String getLists() {
-        return lists;
+    public shoppingListsTbl() {
+        lists="";
+        item = "";
+        itemObtained=false;
     }
-
-    public void setLists(String lists) {
-        this.lists = lists;
-    }
-
-    @ColumnInfo(name="item_name")
-    public String item;
-
-    @ColumnInfo(name="obtained")
-    public boolean itemObtained;
 }

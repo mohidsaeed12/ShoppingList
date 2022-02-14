@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -23,6 +24,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class CategoriesActivity extends AppCompatActivity {
+
+    AppDatabase db= Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "database").build();
+    itemsDAO table_of_items=db.itemsDao();
 
     private static final String TAG = "categoriesActivity";
 
