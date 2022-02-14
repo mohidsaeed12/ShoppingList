@@ -83,7 +83,7 @@ public class ShoppingListsActivity extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerView.");
         RecyclerView recyclerView = findViewById(R.id.list_recycler);
-        CustomAdapter adapter = new CustomAdapter(this, lists);
+        ListAdapter adapter = new ListAdapter(this, lists);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

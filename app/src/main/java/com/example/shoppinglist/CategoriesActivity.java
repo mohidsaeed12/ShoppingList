@@ -34,7 +34,7 @@ public class CategoriesActivity extends AppCompatActivity {
     public static final String CATEGORIES = "categories";
 
     // Vars
-    ArrayList<List> categories;
+    ArrayList<Category> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class CategoriesActivity extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerView.");
         RecyclerView recyclerView = findViewById(R.id.category_recycler);
-        CustomAdapter adapter = new CustomAdapter(this, categories);
+        CatAdapter adapter = new CatAdapter(this, categories);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -100,7 +100,7 @@ public class CategoriesActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 this.dialogInterface = dialogInterface;
                 this.i = i;
-                categories.add(new List(input.getText().toString()));
+                categories.add(new Category(input.getText().toString()));
                 saveData();
             }
         });

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
     private static final String TAG = "CustomAdapter";
 
     // Lists of the list names and dates created
@@ -22,7 +22,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private final Context context;
 
     // Our adapter constructor
-    public CustomAdapter(Context context, ArrayList<List> lists) {
+    public ListAdapter(Context context, ArrayList<List> lists) {
         this.lists = lists;
         this.context = context;
     }
