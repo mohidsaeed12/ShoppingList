@@ -3,9 +3,9 @@ package com.example.shoppinglist;
 
 // THESE CLASSES ARE TEMPORARY UNTIL WE GET ROOM WORKING
 public class Item {
-    String name;
-    Category category;
-    int amount;
+    private String name;
+    private Category category;
+    private int amount;
 
     public Item(String name, Category category) {
         this.name = name;

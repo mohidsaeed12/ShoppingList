@@ -7,9 +7,9 @@ import java.util.Date;
 
 // THESE CLASSES ARE TEMPORARY UNTIL WE GET ROOM WORKING
 public class List {
-    ArrayList<Item> items;
-    String name;
-    String date;
+    private ArrayList<Item> items;
+    private String name;
+    private String date;
 
     public List(String name) {
         this.name = name;

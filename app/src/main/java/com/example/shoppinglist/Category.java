@@ -3,9 +3,9 @@ package com.example.shoppinglist;
 
 //THIS CLASS IS TEMPORARY
 public class Category {
-    String name;
+    private String name;
     //color is temporary but will be used to set the color of categories or something like that at
-    String color;
+    private String color;
 
     public Category(String name) {
         this.name = name;
