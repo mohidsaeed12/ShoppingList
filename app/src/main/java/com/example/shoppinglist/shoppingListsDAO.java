@@ -1,11 +1,9 @@
 package com.example.shoppinglist;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RewriteQueriesToDropUnusedColumns;
 import androidx.room.Update;
