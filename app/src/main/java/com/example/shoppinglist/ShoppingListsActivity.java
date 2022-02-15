@@ -75,6 +75,7 @@ public class ShoppingListsActivity extends AppCompatActivity {
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveData();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
@@ -101,6 +102,7 @@ public class ShoppingListsActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(LISTS, null);
+        Log.d(TAG, json);
         Type type = new TypeToken<ArrayList<List>>() {}.getType();
         lists = gson.fromJson(json, type);
 
