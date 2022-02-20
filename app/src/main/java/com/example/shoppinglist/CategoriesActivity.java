@@ -100,7 +100,7 @@ public class CategoriesActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 this.dialogInterface = dialogInterface;
                 this.i = i;
-                categories.add(new Category(input.getText().toString()));
+                //categories.add(new Category(input.getText().toString()));
                 saveData();
             }
         });

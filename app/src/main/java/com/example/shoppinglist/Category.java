@@ -3,13 +3,14 @@ package com.example.shoppinglist;
 
 //THIS CLASS IS TEMPORARY
 public class Category {
-    String name;
-    //color is temporary but will be used to set the color of categories or something like that at
-    String color;
+    private String name;
+    private String textColor;
+    private String fillColor;
 
-    public Category(String name) {
+    public Category(String name, String textColor, String fillColor) {
         this.name = name;
-        this.color = "green";
+        this.textColor = textColor;
+        this.fillColor = fillColor;
     }
 
     public String getName() {
@@ -20,11 +21,19 @@ public class Category {
         this.name = name;
     }
 
-    public String getColor() {
-        return color;
+    public String getTextColor() {
+        return textColor;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public String getFillColor() {
+        return fillColor;
+    }
+
+    public void setFillColor(String fillColor) {
+        this.fillColor = fillColor;
     }
 }
