@@ -28,11 +28,11 @@ public class slViewHolder extends RecyclerView.ViewHolder {
     }
     public void bind(String list,String item,String cat){slNameTxt.setText(list);slItemTxt.setText(item);slCatTxt.setText(cat);}
 
-    private TextView listName;
-    private TextView itemName;
-    private TextView catName;
-    private RelativeLayout parentLayout;
-    slViewHolder create(ViewGroup parent){
+    private static TextView listName;
+    private static TextView itemName;
+    private static TextView catName;
+    private static RelativeLayout parentLayout;
+    static slViewHolder create(ViewGroup parent){
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.sl_recyclerview, parent, false);
         listName = view.findViewById(R.id.list_name_text);
         itemName = view.findViewById(R.id.item_name_text);
