@@ -1,13 +1,7 @@
 package com.example.shoppinglist;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -15,31 +9,43 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ShoppingListsActivity extends AppCompatActivity {
 
     private static final String TAG = "ShoppingListsActivity";
 
-    public static final String SHARED_PREFS = "sharedprefs";
-    public static final String LISTS = "lists";
+    private slViewModel viewModel;
+    @NonNull DiffUtil.ItemCallback diffCallback;
+    @NonNull
+    Observer<? super java.util.List<shoppingListsTbl>> shoppingListObserver=new Observer<java.util.List<shoppingListsTbl>>() {
+        @Override
+        public void onChanged(java.util.List<shoppingListsTbl> shoppingListsTbls) {
+            shoppingListObserver.notify();
+        }
+    };
+    SLlistAdapter adapter=new SLlistAdapter(diffCallback);
 
-    // Vars
-    ArrayList<List> lists;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_lists);
 
-        loadData();
-        Log.d(TAG, "onCreate: created.");
+        viewModel=new ViewModelProvider(this).get(slViewModel.class);
+        viewModel.getSLrecords().observe(this, shoppingListObserver->{adapter.submitList(shoppingListObserver);});
 
+
+        Log.d(TAG, "onCreate: created.");
 
         final FloatingActionButton newListBtn = findViewById(R.id.new_list_btn);
         final Button returnBtn = findViewById(R.id.return_btn);
@@ -58,8 +64,9 @@ public class ShoppingListsActivity extends AppCompatActivity {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        lists.add(new List(input.getText().toString()));
-                        saveData();
+
+                        //lists.add(new List<String>(input.getText().toString()));
+                        saveData(input.getText().toString());
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -75,7 +82,7 @@ public class ShoppingListsActivity extends AppCompatActivity {
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
+                //saveData();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
@@ -83,31 +90,17 @@ public class ShoppingListsActivity extends AppCompatActivity {
 
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerView.");
-        RecyclerView recyclerView = findViewById(R.id.list_recycler);
-        ListAdapter adapter = new ListAdapter(this, lists);
+
+        RecyclerView recyclerView=findViewById(R.id.list_recycler);
+        final SLlistAdapter adapter=new SLlistAdapter(new SLlistAdapter.SLdiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void saveData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(lists);
-        editor.putString(LISTS, json);
-        editor.apply();
+    private void saveData(String name) {
+        shoppingListsTbl newRecord=new shoppingListsTbl(name,"",false);
+        viewModel.insert(newRecord);
     }
 
-    private void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(LISTS, null);
-        Log.d(TAG, json);
-        Type type = new TypeToken<ArrayList<List>>() {}.getType();
-        lists = gson.fromJson(json, type);
 
-        if(lists == null) {
-            lists = new ArrayList<>();
-        }
-    }
 }

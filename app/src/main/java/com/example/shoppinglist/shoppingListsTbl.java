@@ -12,8 +12,24 @@ public class shoppingListsTbl {
     @ColumnInfo(name="obtained")    public boolean itemObtained;
 
     public shoppingListsTbl() {
-        lists="";
-        item = "";
-        itemObtained=false;
+        this.lists="";
+        this.item = "";
+        this.itemObtained=false;
     }
+
+    public shoppingListsTbl(String list, String items_name) {
+        this.lists=list;
+        this.item = items_name;
+        this.itemObtained=false;
+    }
+
+    public shoppingListsTbl(String list, String items_name, boolean isObtained) {
+        this.lists=list;
+        this.item = items_name;
+        this.itemObtained=isObtained;
+    }
+
+    public String getLists() {return this.lists; }
+    public String getItem()  {return this.item;}
+    public boolean getItemObtained() {return this.itemObtained;}
 }

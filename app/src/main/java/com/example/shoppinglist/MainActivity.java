@@ -1,14 +1,15 @@
 package com.example.shoppinglist;
 
-import static com.example.shoppinglist.R.*;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import static com.example.shoppinglist.R.id;
+import static com.example.shoppinglist.R.layout;
+import static com.example.shoppinglist.R.string;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,7 +18,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
 
-        AppDatabase db= Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"database").build();
+        //AppDatabase db= Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"database").build();
+        //shoppingListsDAO accessShoppingListTbl=db.shoppingListDao();
+        //itemsDAO accessItemsTbl=db.itemsDao();
 
         final Button goToCategories = findViewById(id.categories_btn);
         final Button goToShoppingLists=findViewById(id.shopping_list_btn);
