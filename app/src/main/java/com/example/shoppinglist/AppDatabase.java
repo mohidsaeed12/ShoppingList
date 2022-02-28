@@ -52,17 +52,6 @@ public abstract class AppDatabase extends RoomDatabase{
             });
         }
     };
-
-        /*private static class PopulateDBAsyncTask extends AsyncTask<Void,Void,Void> {
-            PopulateDBAsyncTask(AppDatabase db){
-                Dao dao = db.Dao();
-            }
-            @Override
-            protected Void doInBackground(Void... voids){
-                return null;
-            }
-        }
-    };*/
 }
 
 

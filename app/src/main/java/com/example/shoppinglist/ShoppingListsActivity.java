@@ -1,13 +1,14 @@
 package com.example.shoppinglist;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import static android.widget.LinearLayout.VERTICAL;
+
 public class ShoppingListsActivity extends AppCompatActivity {
 
     private static final String TAG = "ShoppingListsActivity";
@@ -30,11 +33,11 @@ public class ShoppingListsActivity extends AppCompatActivity {
     Observer<? super java.util.List<shoppingListsTbl>> shoppingListObserver=new Observer<java.util.List<shoppingListsTbl>>() {
         @Override
         public void onChanged(java.util.List<shoppingListsTbl> shoppingListsTbls) {
-            shoppingListObserver.notify();
+            shoppingListObserver.notifyAll();
         }
     };
-    SLlistAdapter adapter=new SLlistAdapter(diffCallback);
 
+    SLlistAdapter adapter=new SLlistAdapter(diffCallback);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +59,22 @@ public class ShoppingListsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingListsActivity.this);
                 builder.setTitle("Enter the name for your list");
+                Context context=ShoppingListsActivity.this;
+                LinearLayout layout=new LinearLayout(context);
+                layout.setOrientation(VERTICAL);
 
-                final EditText input = new EditText(ShoppingListsActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+                final EditText input1=new EditText(context);
+                final EditText input2=new EditText(context);
+                input1.setHint("Shopping list name");
+                input2.setHint("Item name");
+                layout.addView(input1);
+                layout.addView(input2);
 
+                builder.setView(layout);
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
-                        //lists.add(new List<String>(input.getText().toString()));
-                        saveData(input.getText().toString());
+                        saveData(input1.getText().toString(),input2.getText().toString());
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -76,16 +84,17 @@ public class ShoppingListsActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+                //setContentView(R.layout.activity_shopping_lists);
             }
         });
 
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //saveData();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+        //setContentView(R.layout.activity_shopping_lists);
     }
 
     private void initRecyclerView(){
@@ -97,10 +106,13 @@ public class ShoppingListsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void saveData(String name) {
+    public void saveData(String name) {
         shoppingListsTbl newRecord=new shoppingListsTbl(name,"",false);
         viewModel.insert(newRecord);
     }
 
-
+    public void saveData(String name, String item) {
+        shoppingListsTbl newRecord=new shoppingListsTbl(name,item,false);
+        viewModel.insert(newRecord);
+    }
 }

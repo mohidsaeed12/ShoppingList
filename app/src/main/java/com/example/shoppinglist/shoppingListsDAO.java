@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.RewriteQueriesToDropUnusedColumns;
 import androidx.room.Update;
@@ -29,7 +30,7 @@ class SLrecordTuple{
 
 @Dao
 public interface shoppingListsDAO {
-    @Insert void insert(shoppingListsTbl... shoppingList);
+    @Insert(onConflict= OnConflictStrategy.IGNORE) void insert(shoppingListsTbl... shoppingList);
     @Update void update(shoppingListsTbl... shoppingList);
     @Delete void delete(shoppingListsTbl... shoppingList);
 

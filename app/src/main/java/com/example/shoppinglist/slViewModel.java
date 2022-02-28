@@ -19,9 +19,8 @@ public class slViewModel extends AndroidViewModel {
     LiveData<java.util.List<item_obtained_tuple>> getSLbyCat(){
         return SLitemsObtained;
     }
-    LiveData<java.util.List<shoppingListsTbl>> getSLrecords(){
-        return SLtblRecord;
-    }
+    LiveData<java.util.List<shoppingListsTbl>> getSLrecords(){ return SLtblRecord; }
+
     public void insert(shoppingListsTbl slTable){repo.SLinsert(slTable);}
     public void update(shoppingListsTbl slTable){repo.SLupdate(slTable);}
     public void delete(shoppingListsTbl slTable){repo.SLdelete(slTable);}
