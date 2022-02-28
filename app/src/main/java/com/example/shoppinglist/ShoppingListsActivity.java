@@ -15,20 +15,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static android.widget.LinearLayout.VERTICAL;
+import static androidx.recyclerview.widget.DiffUtil.ItemCallback;
 
 public class ShoppingListsActivity extends AppCompatActivity {
 
     private static final String TAG = "ShoppingListsActivity";
 
     private slViewModel viewModel;
-    @NonNull DiffUtil.ItemCallback diffCallback;
+    @NonNull
+    ItemCallback<shoppingListsTbl> diffCallback= new SLlistAdapter.SLdiff();
     @NonNull
     Observer<? super java.util.List<shoppingListsTbl>> shoppingListObserver=new Observer<java.util.List<shoppingListsTbl>>() {
         @Override

@@ -37,7 +37,7 @@ public abstract class AppDatabase extends RoomDatabase{
             db= Room.databaseBuilder(context.getApplicationContext(),AppDatabase.class,"database").build();
         }
         return db;
-    };
+    }
 
     private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
@@ -48,7 +48,7 @@ public abstract class AppDatabase extends RoomDatabase{
                 //dao.delete();
 
                 shoppingListsTbl SL = new shoppingListsTbl("groceries","onions",false);
-                dao.insert(new shoppingListsTbl[]{SL});
+                dao.insert(SL);
             });
         }
     };
