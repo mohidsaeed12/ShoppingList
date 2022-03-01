@@ -1,45 +1,55 @@
 package com.example.shoppinglist;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import static android.widget.LinearLayout.VERTICAL;
+import static androidx.recyclerview.widget.DiffUtil.ItemCallback;
 
 public class ShoppingListsActivity extends AppCompatActivity {
 
     private static final String TAG = "ShoppingListsActivity";
 
-    public static final String SHARED_PREFS = "sharedprefs";
-    public static final String LISTS = "lists";
+    private slViewModel viewModel;
+    @NonNull
+    ItemCallback<shoppingListsTbl> diffCallback= new SLlistAdapter.SLdiff();
+    @NonNull
+    Observer<? super java.util.List<shoppingListsTbl>> shoppingListObserver=new Observer<java.util.List<shoppingListsTbl>>() {
+        @Override
+        public void onChanged(java.util.List<shoppingListsTbl> shoppingListsTbls) {
+            shoppingListObserver.notifyAll();
+        }
+    };
 
-    // Vars
-    ArrayList<List> lists;
-    
+    SLlistAdapter adapter=new SLlistAdapter(diffCallback);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_lists);
 
-        loadData();
-        Log.d(TAG, "onCreate: created.");
+        viewModel=new ViewModelProvider(this).get(slViewModel.class);
+        viewModel.getSLrecords().observe(this, shoppingListObserver->{adapter.submitList(shoppingListObserver);});
 
+
+        Log.d(TAG, "onCreate: created.");
 
         final FloatingActionButton newListBtn = findViewById(R.id.new_list_btn);
         final Button returnBtn = findViewById(R.id.return_btn);
@@ -50,16 +60,22 @@ public class ShoppingListsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingListsActivity.this);
                 builder.setTitle("Enter the name for your list");
+                Context context=ShoppingListsActivity.this;
+                LinearLayout layout=new LinearLayout(context);
+                layout.setOrientation(VERTICAL);
 
-                final EditText input = new EditText(ShoppingListsActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+                final EditText input1=new EditText(context);
+                final EditText input2=new EditText(context);
+                input1.setHint("Shopping list name");
+                input2.setHint("Item name");
+                layout.addView(input1);
+                layout.addView(input2);
 
+                builder.setView(layout);
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        lists.add(new List(input.getText().toString()));
-                        saveData();
+                        saveData(input1.getText().toString(),input2.getText().toString());
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -69,45 +85,35 @@ public class ShoppingListsActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+                //setContentView(R.layout.activity_shopping_lists);
             }
         });
 
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+        //setContentView(R.layout.activity_shopping_lists);
     }
 
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerView.");
-        RecyclerView recyclerView = findViewById(R.id.list_recycler);
-        ListAdapter adapter = new ListAdapter(this, lists);
+
+        RecyclerView recyclerView=findViewById(R.id.list_recycler);
+        final SLlistAdapter adapter=new SLlistAdapter(new SLlistAdapter.SLdiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void saveData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(lists);
-        editor.putString(LISTS, json);
-        editor.apply();
+    public void saveData(String name) {
+        shoppingListsTbl newRecord=new shoppingListsTbl(name,"",false);
+        viewModel.insert(newRecord);
     }
 
-    private void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(LISTS, null);
-        Log.d(TAG, json);
-        Type type = new TypeToken<ArrayList<List>>() {}.getType();
-        lists = gson.fromJson(json, type);
-
-        if(lists == null) {
-            lists = new ArrayList<>();
-        }
+    public void saveData(String name, String item) {
+        shoppingListsTbl newRecord=new shoppingListsTbl(name,item,false);
+        viewModel.insert(newRecord);
     }
 }

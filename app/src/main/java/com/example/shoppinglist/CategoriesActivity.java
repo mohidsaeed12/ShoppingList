@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -24,21 +25,27 @@ import java.util.ArrayList;
 
 public class CategoriesActivity extends AppCompatActivity {
 
+
     private static final String TAG = "categoriesActivity";
 
     public static final String SHARED_PREFS_CATEGORIES = "sharedprefscategories";
     public static final String CATEGORIES = "categories";
 
     // Vars
-    ArrayList<Category> categories;
+    ArrayList<List<String>> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
+        AppDatabase db= Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"database").build();
+        itemsDAO accessItemsTbl=db.itemsDao();
 
-        loadData();
+        itemsTbl test_insertion=new itemsTbl("bacon","meat");
+        accessItemsTbl.insert(test_insertion);
+
+        loadData(accessItemsTbl);
         Log.d(TAG, "onCreate: created.");
 
 
@@ -54,7 +61,7 @@ public class CategoriesActivity extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerView.");
         RecyclerView recyclerView = findViewById(R.id.category_recycler);
-        CatAdapter adapter = new CatAdapter(this, categories);
+        CustomAdapter adapter = new CustomAdapter(this, categories);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -72,12 +79,19 @@ public class CategoriesActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS_CATEGORIES, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(CATEGORIES, null);
-        Type type = new TypeToken<ArrayList<List>>() {}.getType();
+        Type type = new TypeToken<ArrayList<List<String>>>() {}.getType();
         categories = gson.fromJson(json, type);
 
         if(categories == null) {
             categories = new ArrayList<>();
         }
+    }
+
+    private void loadData(itemsDAO accessItemsTbl) {
+        if(categories == null) {
+            categories = new ArrayList<>();
+        }
+        //categories.add((List) accessItemsTbl.categoryNames());
     }
 
     private void onClick(View view) {
@@ -96,7 +110,7 @@ public class CategoriesActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 this.dialogInterface = dialogInterface;
                 this.i = i;
-                //categories.add(new Category(input.getText().toString()));
+                categories.add(new List<String>(input.getText().toString()));
                 saveData();
             }
         });
