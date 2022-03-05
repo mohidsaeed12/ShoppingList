@@ -1,7 +1,6 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.db;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.ColumnInfo;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -10,38 +9,10 @@ import androidx.room.Query;
 import androidx.room.RewriteQueriesToDropUnusedColumns;
 import androidx.room.Update;
 
+import com.example.shoppinglist.datatuples.item_obtained_tuple;
+
 import java.util.List;
 
-
-class item_obtained_tuple{
-    @ColumnInfo(name="item_name") public String item;
-    @ColumnInfo(name="obtained") public boolean obtained;
-
-    item_obtained_tuple(String item, boolean obtained){
-        this.item=item;
-        this.obtained=obtained;
-    }
-
-    boolean equals(item_obtained_tuple other){
-        return (this.item.equals(other.item)&&this.obtained==other.obtained);
-    }
-}
-
-class SLrecordTuple{
-    @ColumnInfo(name="category") public String category;
-    @ColumnInfo(name="item_name") public String item;
-    @ColumnInfo(name="obtained") public boolean obtained;
-
-    SLrecordTuple(String category, String item, boolean obtained){
-        this.category=category;
-        this.item=item;
-        this.obtained=obtained;
-    }
-
-    boolean equals(SLrecordTuple other){
-        return (this.category.equals(other.category)&&this.item.equals(other.item)&&this.obtained==other.obtained);
-    }
-}
 
 @Dao
 public interface shoppingListsDAO {

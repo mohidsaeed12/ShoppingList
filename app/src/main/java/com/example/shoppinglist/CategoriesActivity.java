@@ -19,6 +19,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shoppinglist.adaptersandviews.catListAdapter;
+import com.example.shoppinglist.adaptersandviews.catViewModel;
+import com.example.shoppinglist.db.itemsTbl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static android.widget.LinearLayout.VERTICAL;

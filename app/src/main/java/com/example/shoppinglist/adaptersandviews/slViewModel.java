@@ -1,9 +1,13 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.adaptersandviews;
 
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.example.shoppinglist.dataRepository;
+import com.example.shoppinglist.datatuples.item_obtained_tuple;
+import com.example.shoppinglist.db.shoppingListsTbl;
 
 public class slViewModel extends AndroidViewModel {
     private dataRepository repo;
@@ -19,7 +23,7 @@ public class slViewModel extends AndroidViewModel {
     LiveData<java.util.List<item_obtained_tuple>> getSLbyCat(){
         return SLitemsObtained;
     }
-    LiveData<java.util.List<shoppingListsTbl>> getSLrecords(){ return SLtblRecord; }
+    public LiveData<java.util.List<shoppingListsTbl>> getSLrecords(){ return SLtblRecord; }
 
     public void insert(shoppingListsTbl slTable){repo.SLinsert(slTable);}
     public void update(shoppingListsTbl slTable){repo.SLupdate(slTable);}

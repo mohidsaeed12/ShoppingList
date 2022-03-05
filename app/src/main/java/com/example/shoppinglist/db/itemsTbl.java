@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.db;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -22,7 +22,7 @@ public class itemsTbl {
         this.category_name=cat;
     }
 
-    boolean equals(itemsTbl other){
+    public boolean equals(itemsTbl other){
         return (this.item_name.equals(other.item_name)&&this.category_name.equals(other.category_name));
     }
 

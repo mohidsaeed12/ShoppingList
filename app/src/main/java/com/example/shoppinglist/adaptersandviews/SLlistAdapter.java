@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.adaptersandviews;
 
 import android.view.ViewGroup;
 
@@ -6,9 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.example.shoppinglist.db.shoppingListsTbl;
+
 public class SLlistAdapter extends ListAdapter<shoppingListsTbl, slViewHolder> {
 
-    protected SLlistAdapter(@NonNull DiffUtil.ItemCallback<shoppingListsTbl> diffCallback) {
+    public SLlistAdapter(@NonNull DiffUtil.ItemCallback<shoppingListsTbl> diffCallback) {
         super(diffCallback);
     }
 
@@ -25,7 +27,7 @@ public class SLlistAdapter extends ListAdapter<shoppingListsTbl, slViewHolder> {
     }
 
 
-    static class SLdiff extends DiffUtil.ItemCallback<shoppingListsTbl>{
+    public static class SLdiff extends DiffUtil.ItemCallback<shoppingListsTbl>{
 
         @Override
         public boolean areItemsTheSame(shoppingListsTbl oldItem, shoppingListsTbl newItem) {

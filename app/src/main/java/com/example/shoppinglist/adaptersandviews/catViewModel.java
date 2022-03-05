@@ -1,9 +1,12 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.adaptersandviews;
 
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.example.shoppinglist.dataRepository;
+import com.example.shoppinglist.db.itemsTbl;
 
 public class catViewModel extends AndroidViewModel {
     private dataRepository repo;
@@ -20,7 +23,7 @@ public class catViewModel extends AndroidViewModel {
         catItemsByCat=repo.localCatItemsByCat;
     }
     LiveData<java.util.List<String>> getCategoryNames(){return catNames;}
-    LiveData<java.util.List<itemsTbl>> getAllItems(){return catAllItems;}
+    public LiveData<java.util.List<itemsTbl>> getAllItems(){return catAllItems;}
     LiveData<java.util.List<itemsTbl>> getItemsByCategory(){return catItemsByCat;}
 
     public void insert(itemsTbl item){repo.catInsert(item);}

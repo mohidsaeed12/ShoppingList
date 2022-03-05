@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface itemsDAO {
     @Insert()
-    void insert(itemsTbl ... items);
+    void insert(itemsTbl... items);
 
     @Update
     void update(itemsTbl... items);

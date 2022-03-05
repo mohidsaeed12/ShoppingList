@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.adaptersandviews;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.shoppinglist.R;
 
 public class slViewHolder extends RecyclerView.ViewHolder {
     private final TextView slItemView;

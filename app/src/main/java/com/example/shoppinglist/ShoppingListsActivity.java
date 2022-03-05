@@ -18,6 +18,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shoppinglist.adaptersandviews.SLlistAdapter;
+import com.example.shoppinglist.adaptersandviews.slViewModel;
+import com.example.shoppinglist.db.shoppingListsTbl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static android.widget.LinearLayout.VERTICAL;
