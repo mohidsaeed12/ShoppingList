@@ -12,7 +12,7 @@
         android:layout_width="225dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:id="@+id/list_name_text"
+        android:id="@+id/sl_list_name_text"
         android:text="This is a placeholder."
         android:textSize="20sp"
         android:textColor="@color/black"/>

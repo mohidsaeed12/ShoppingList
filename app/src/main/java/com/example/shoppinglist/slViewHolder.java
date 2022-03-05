@@ -18,9 +18,9 @@ public class slViewHolder extends RecyclerView.ViewHolder {
     public slViewHolder(@NonNull View itemView) {
         super(itemView);
         slItemView=itemView.findViewById(R.id.textView);
-        slNameTxt=itemView.findViewById(R.id.list_name_text);
-        slItemTxt=itemView.findViewById(R.id.item_name_text);
-        slCatTxt=itemView.findViewById(R.id.category_name_text);
+        slNameTxt=itemView.findViewById(R.id.sl_list_name_text);
+        slItemTxt=itemView.findViewById(R.id.sl_item_name_text);
+        slCatTxt=itemView.findViewById(R.id.sl_category_name_text);
     }
 
     public void bind(String text){
@@ -34,9 +34,9 @@ public class slViewHolder extends RecyclerView.ViewHolder {
     private static RelativeLayout parentLayout;
     static slViewHolder create(ViewGroup parent){
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.sl_recyclerview, parent, false);
-        listName = view.findViewById(R.id.list_name_text);
-        itemName = view.findViewById(R.id.item_name_text);
-        catName = view.findViewById(R.id.category_name_text);
+        listName = view.findViewById(R.id.sl_list_name_text);
+        itemName = view.findViewById(R.id.sl_item_name_text);
+        catName = view.findViewById(R.id.sl_category_name_text);
         parentLayout = view.findViewById(R.id.parent_layout);
         return new slViewHolder(view);
     }

@@ -33,7 +33,6 @@ public abstract class AppDatabase extends RoomDatabase{
 
     public static synchronized AppDatabase getInstance(Context context){
         if(db==null){
-            //db= Room.databaseBuilder(context.getApplicationContext(),AppDatabase.class,"database").fallbackToDestructiveMigration().addCallback(roomCallback).build();
             db= Room.databaseBuilder(context.getApplicationContext(),AppDatabase.class,"database").build();
         }
         return db;
@@ -45,15 +44,9 @@ public abstract class AppDatabase extends RoomDatabase{
             super.onCreate(dbSQLite);
             databaseWriteExecutor.execute(() -> {
                 shoppingListsDAO dao = db.shoppingListDao();
-                //dao.delete();
-
                 shoppingListsTbl SL = new shoppingListsTbl("groceries","onions",false);
                 dao.insert(SL);
             });
         }
     };
 }
-
-
-
-
