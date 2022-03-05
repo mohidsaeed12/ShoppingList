@@ -12,20 +12,35 @@ import androidx.room.Update;
 
 import java.util.List;
 
-class category_item_tuple {
-    @ColumnInfo(name="category") public String category;
-    @ColumnInfo(name="item_name") public String item;
-}
 
 class item_obtained_tuple{
     @ColumnInfo(name="item_name") public String item;
     @ColumnInfo(name="obtained") public boolean obtained;
+
+    item_obtained_tuple(String item, boolean obtained){
+        this.item=item;
+        this.obtained=obtained;
+    }
+
+    boolean equals(item_obtained_tuple other){
+        return (this.item.equals(other.item)&&this.obtained==other.obtained);
+    }
 }
 
 class SLrecordTuple{
     @ColumnInfo(name="category") public String category;
     @ColumnInfo(name="item_name") public String item;
     @ColumnInfo(name="obtained") public boolean obtained;
+
+    SLrecordTuple(String category, String item, boolean obtained){
+        this.category=category;
+        this.item=item;
+        this.obtained=obtained;
+    }
+
+    boolean equals(SLrecordTuple other){
+        return (this.category.equals(other.category)&&this.item.equals(other.item)&&this.obtained==other.obtained);
+    }
 }
 
 @Dao
@@ -42,7 +57,7 @@ public interface shoppingListsDAO {
     @Query("SELECT itemsTbl.category,itemsTbl.item_name "+
             "FROM itemsTbl INNER JOIN shoppingListsTbl ON shoppingListsTbl.item_name=itemsTbl.item_name "+
             "WHERE shoppingListsTbl.list_name LIKE :selectList")
-    LiveData<List<category_item_tuple>> itemsByList(String selectList);
+    LiveData<List<itemsTbl>> itemsByList(String selectList);
 
     // Lists items at the intersection of a shopping list and a category
     @RewriteQueriesToDropUnusedColumns
