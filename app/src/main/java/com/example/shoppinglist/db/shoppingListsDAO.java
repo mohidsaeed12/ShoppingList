@@ -20,6 +20,7 @@ public interface shoppingListsDAO {
     @Update void update(shoppingListsTbl... shoppingList);
     @Delete void delete(shoppingListsTbl... shoppingList);
 
+    // Simple list of shopping list names
     @Query("SELECT DISTINCT list_name FROM shoppingListsTbl")
     LiveData<List<String>> shoppingListNames();
 
@@ -39,6 +40,7 @@ public interface shoppingListsDAO {
             "ORDER BY shoppingListsTbl.obtained")
     LiveData<List<item_obtained_tuple>> itemsByListAndCategory(String selectList, String selectCategory);
 
+    // List of all shopping lists and items in them
     @Query("SELECT * FROM shoppingListsTbl")
     LiveData<List<shoppingListsTbl>> shoppingListRecords();
 }

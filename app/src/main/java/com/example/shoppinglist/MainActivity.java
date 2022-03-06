@@ -18,14 +18,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
 
-        //AppDatabase db= Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"database").build();
-        //shoppingListsDAO accessShoppingListTbl=db.shoppingListDao();
-        //itemsDAO accessItemsTbl=db.itemsDao();
-
+        // Connecting buttons in XML file to Button objects in java class
         final Button goToCategories = findViewById(id.categories_btn);
         final Button goToShoppingLists=findViewById(id.shopping_list_btn);
 
-        View.OnClickListener homePageButtonSelector; // allows any and all buttons on this activity to go through the same OnClickListener()
+        // allows any and all buttons on this activity to go through the same OnClickListener()
+        View.OnClickListener homePageButtonSelector;
         homePageButtonSelector= view -> {
             // would use switch-case statement, but resource IDs are non-final, so google advises if-else instead
             if(view.getId()==id.categories_btn){
@@ -40,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 throw new IllegalStateException(getString(string.Unexpected_val) + view.getId());
             }
         };
+
+        // When a button on the main activity is pressed, one of these is run to switch to a different activity
         goToCategories.setOnClickListener(homePageButtonSelector);
         goToShoppingLists.setOnClickListener(homePageButtonSelector);
     }

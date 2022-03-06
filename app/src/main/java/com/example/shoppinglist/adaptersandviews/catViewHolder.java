@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shoppinglist.R;
 
 public class catViewHolder extends RecyclerView.ViewHolder {
+    // Declaring View items
     private final TextView catItemView;
-    private final TextView catNameTxt;
-    private final TextView catItemTxt;
+    private static TextView catNameTxt;
+    private static TextView catItemTxt;
 
+    // Constructor
     public catViewHolder(@NonNull View itemView) {
         super(itemView);
         catItemView=itemView.findViewById(R.id.textView);
@@ -23,18 +25,17 @@ public class catViewHolder extends RecyclerView.ViewHolder {
         catItemTxt=itemView.findViewById(R.id.cat_item_name_text);
     }
 
-    public void bind(String text){
-        catItemView.setText(text);
-    }
+    // Binding to adapter
     public void bind(String cat,String item){catNameTxt.setText(cat);catItemTxt.setText(item);}
 
-    private static TextView itemName;
-    private static TextView catName;
+    // Preparing to inflate the layout
     private static RelativeLayout parentLayout;
+
+    // Inflate the layout
     static catViewHolder create(ViewGroup parent){
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.cat_recyclerview, parent, false);
-        itemName = view.findViewById(R.id.cat_item_name_text);
-        catName = view.findViewById(R.id.cat_category_name_text);
+        catItemTxt = view.findViewById(R.id.cat_item_name_text);
+        catNameTxt = view.findViewById(R.id.cat_category_name_text);
         parentLayout = view.findViewById(R.id.parent_layout);
         return new catViewHolder(view);
     }

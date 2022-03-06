@@ -13,13 +13,18 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {itemsTbl.class, shoppingListsTbl.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase{
+
+    // One Data Access Object for each table
     public abstract itemsDAO itemsDao();
     public abstract shoppingListsDAO shoppingListDao();
 
     private static volatile AppDatabase db;
+
+    // Room database queries must be run asynchronously
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor= Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    // Create an instance of the database
     public static AppDatabase getDB(final Context context){
         if(db==null){
             synchronized (AppDatabase.class){
@@ -31,22 +36,21 @@ public abstract class AppDatabase extends RoomDatabase{
         return db;
     }
 
+    // Create an instance of the database
     public static synchronized AppDatabase getInstance(Context context){
         if(db==null){
-            //db= Room.databaseBuilder(context.getApplicationContext(),AppDatabase.class,"database").fallbackToDestructiveMigration().addCallback(roomCallback).build();
             db= Room.databaseBuilder(context.getApplicationContext(),AppDatabase.class,"database").build();
         }
         return db;
     }
 
+    // Attempt to use a Callback to add some data
     private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase dbSQLite) {
             super.onCreate(dbSQLite);
             databaseWriteExecutor.execute(() -> {
                 shoppingListsDAO dao = db.shoppingListDao();
-                //dao.delete();
-
                 shoppingListsTbl SL = new shoppingListsTbl("groceries","onions",false);
                 dao.insert(SL);
             });

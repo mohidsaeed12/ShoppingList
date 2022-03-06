@@ -9,13 +9,12 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.example.shoppinglist.db.shoppingListsTbl;
 
 public class SLlistAdapter extends ListAdapter<shoppingListsTbl, slViewHolder> {
-
+    // Constructor
     public SLlistAdapter(@NonNull DiffUtil.ItemCallback<shoppingListsTbl> diffCallback) {
         super(diffCallback);
     }
 
-    @NonNull
-    @Override
+    @NonNull @Override
     public slViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return slViewHolder.create(parent);
     }
@@ -28,12 +27,13 @@ public class SLlistAdapter extends ListAdapter<shoppingListsTbl, slViewHolder> {
 
 
     public static class SLdiff extends DiffUtil.ItemCallback<shoppingListsTbl>{
-
+        // Check object references
         @Override
         public boolean areItemsTheSame(shoppingListsTbl oldItem, shoppingListsTbl newItem) {
             return oldItem==newItem;
         }
 
+        // Check object values
         @Override
         public boolean areContentsTheSame(shoppingListsTbl oldItem, shoppingListsTbl newItem) {
             return oldItem.getLists().equals(newItem.getLists());

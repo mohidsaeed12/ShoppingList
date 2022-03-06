@@ -21,14 +21,17 @@ public interface itemsDAO {
     @Delete
     void delete(itemsTbl item);
 
+    // A simple list of all category names
     @Query("SELECT DISTINCT category FROM itemsTbl")
     LiveData<List<String>> categoryNames();
 
+    // Showing all items and the categories to which they belong
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT itemsTbl.category,itemsTbl.item_name "+
             "FROM itemsTbl")
     LiveData<List<itemsTbl>> showAllItems();
 
+    // Showing all items within the specified category
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT itemsTbl.category, itemsTbl.item_name "+
             "FROM itemsTbl "+

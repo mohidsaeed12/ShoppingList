@@ -11,6 +11,7 @@ public class shoppingListsTbl {
     @ColumnInfo(name="item_name")   @NonNull public String item;
     @ColumnInfo(name="obtained")    public boolean itemObtained;
 
+    // Constructors
     public shoppingListsTbl() {
         this.lists="";
         this.item = "";
@@ -29,6 +30,7 @@ public class shoppingListsTbl {
         this.itemObtained=isObtained;
     }
 
+    // Getter methods
     public String getLists() {return this.lists; }
     public String getItem()  {return this.item;}
     public boolean getItemObtained() {return this.itemObtained;}
