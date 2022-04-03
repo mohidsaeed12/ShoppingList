@@ -30,8 +30,8 @@ public class catViewHolder extends RecyclerView.ViewHolder {
     // Binding to adapter
     public void bind(final catViewModel viewModel, int i){
         Log.d(TAG, "bind");
-        catNameTxt.setText(viewModel.getAllItemsSync().get(i).getItem_name());
         catNameTxt.setText(viewModel.getAllItemsSync().get(i).getCategory_name());
+        catItemTxt.setText(viewModel.getAllItemsSync().get(i).getItem_name());
     }
 
     // Preparing to inflate the layout

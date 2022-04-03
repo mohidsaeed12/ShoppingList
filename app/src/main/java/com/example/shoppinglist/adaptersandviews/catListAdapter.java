@@ -32,23 +32,16 @@ public class catListAdapter extends ListAdapter<itemsTbl, catViewHolder> {
     @NonNull @Override
     public catViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return catViewHolder.create(parent);
-        //final View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-        //return new catViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull catViewHolder holder, int position) {
         holder.bind(viewModel, position);
 
-        //holder.bind(current.getCategory_name(),current.getItem_name());
-        //cast.add(current);
-        //catViewHolder.catNameTxt.setText(cast.get(position).getCategory_name());
-        //catViewHolder.catItemTxt.setText(cast.get(position).getItem_name());
-
         /*holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, cast.get(position).getItem_name(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "click detected", Toast.LENGTH_SHORT).show();
             }
         });*/
     }

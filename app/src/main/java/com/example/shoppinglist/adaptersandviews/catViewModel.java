@@ -41,13 +41,11 @@ public class catViewModel extends AndroidViewModel {
 
     public LiveData<java.util.List<itemsTbl>> getAllItems(){
         Log.d(TAG, "getAllItems");
-        temp=catAllItems;
-        return temp;
+        return catAllItems;
     }
 
     public java.util.List<itemsTbl> getAllItemsSync(){
         Log.d(TAG, "getAllItems");
-        List<itemsTbl> temp=catAllItemsSync;
         return catAllItemsSync;
     }
 
