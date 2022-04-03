@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.example.shoppinglist.adaptersandviews;
 
 import android.content.Context;
 import android.util.Log;
