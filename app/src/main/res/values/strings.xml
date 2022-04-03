@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ShoppingList</string>
+    <string name="home">Home</string>
+    <string name="Unexpected_val">\"Unexpected value: \"</string>
+    <string name="categories">Categories</string>
+    <string name="shopping_lists">Shopping lists</string>
+    <string name="clickToReturn">Return</string>
 </resources>
