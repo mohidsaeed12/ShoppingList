@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.shoppinglist"
+        applicationId "com.Spring2022CSE3311.shoppinglist"
         minSdkVersion 16
         targetSdkVersion 32
         versionCode 1

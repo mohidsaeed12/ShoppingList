@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.shoppinglist">
+    package="com.Spring2022CSE3311.shoppinglist">
 
     <application
         android:allowBackup="true"
@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingList">
-        <activity android:name=".ShoppingListsActivity"></activity>
-        <activity android:name=".CategoriesActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.Spring2022CSE3311.shoppinglist.ShoppingListsActivity"></activity>
+        <activity android:name="com.Spring2022CSE3311.shoppinglist.CategoriesActivity" />
+        <activity android:name="com.Spring2022CSE3311.shoppinglist.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
