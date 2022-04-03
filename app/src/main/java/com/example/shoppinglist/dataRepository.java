@@ -56,6 +56,8 @@ public class dataRepository {
     public LiveData<List<itemsTbl>> localCatItemsByCat;
 
     public List<itemsTbl> localCatAllItemsSync;
+    public List<shoppingListsTbl> localSLrecordSync;
+    public List<String> localSLnamesSync;
 
 
     public dataRepository(Application application){
@@ -76,12 +78,38 @@ public class dataRepository {
         localCatItemsByCat=localItemsDao.itemsByCategory(getSelectCategory());
 
         localCatAllItemsSync=getItemsAsync();
+        localSLrecordSync=getSLrecsAsync();
+        localSLnamesSync=getSLnamesAsync();
     }
 
     public List<itemsTbl> getItemsAsync(){
         List<itemsTbl> temp = null;
         try {
             temp= new getItemsAsynchronously(localItemsDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return temp;
+    }
+
+    public List<String> getSLnamesAsync(){
+        List<String> temp = null;
+        try {
+            temp= new getSLnamesAsynchronously(localSLdao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return temp;
+    }
+
+    public List<shoppingListsTbl> getSLrecsAsync(){
+        List<shoppingListsTbl> temp = null;
+        try {
+            temp= new getSLrecsAsynchronously(localSLdao).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -101,6 +129,34 @@ public class dataRepository {
         @Override
         protected List<itemsTbl> doInBackground(Void... voids) {
             return itemsDao.workaroundShowAllItems();
+        }
+    }
+
+    private static class getSLnamesAsynchronously extends AsyncTask<Void, Void, List<String>>{
+
+        private shoppingListsDAO SLdao;
+
+        getSLnamesAsynchronously(shoppingListsDAO SLdao){
+            this.SLdao=SLdao;
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            return SLdao.workaroundShoppingListNames();
+        }
+    }
+
+    private static class getSLrecsAsynchronously extends AsyncTask<Void, Void, List<shoppingListsTbl>>{
+
+        private shoppingListsDAO SLdao;
+
+        getSLrecsAsynchronously(shoppingListsDAO SLdao){
+            this.SLdao=SLdao;
+        }
+
+        @Override
+        protected List<shoppingListsTbl> doInBackground(Void... voids) {
+            return SLdao.workaroundShoppingListRecords();
         }
     }
 

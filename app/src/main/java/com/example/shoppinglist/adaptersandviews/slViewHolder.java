@@ -28,7 +28,16 @@ public class slViewHolder extends RecyclerView.ViewHolder {
     }
 
     // Binding to adapter
-    public void bind(String list,String item,String cat){slNameTxt.setText(list);slItemTxt.setText(item);slCatTxt.setText(cat);}
+    public void bind(slViewModel viewModel, int i){
+        slNameTxt.setText(viewModel.getSLrecsSync().get(i).getLists());
+        slItemTxt.setText(viewModel.getSLrecsSync().get(i).getItem());
+        if(viewModel.getSLrecsSync().get(i).getItemObtained()){
+            slCatTxt.setText("obtained");
+        }
+        else{
+            slCatTxt.setText("need to get");
+        }
+    }
 
     // Preparing to inflate the layout
     private static RelativeLayout parentLayout;

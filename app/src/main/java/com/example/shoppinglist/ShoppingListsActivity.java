@@ -13,8 +13,11 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,47 +26,52 @@ import com.example.shoppinglist.adaptersandviews.slViewModel;
 import com.example.shoppinglist.db.shoppingListsTbl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import static android.widget.LinearLayout.VERTICAL;
-import static androidx.recyclerview.widget.DiffUtil.ItemCallback;
+import java.util.List;
 
-public class ShoppingListsActivity extends AppCompatActivity {
+import static android.widget.LinearLayout.VERTICAL;
+
+public class ShoppingListsActivity extends AppCompatActivity implements LifecycleOwner {
     // Only used for logging and debugging purposes
     private static final String TAG = "*ShoppingListsActivity";
-
-    // Declaring a viewModel
-    private slViewModel viewModel;
-
-    // Setting up item Callback
-    @NonNull
-    ItemCallback<shoppingListsTbl> diffCallback= new SLlistAdapter.SLdiff();
-
-    // Creating observer
-    @NonNull
-    Observer<? super java.util.List<shoppingListsTbl>> shoppingListObserver=new Observer<java.util.List<shoppingListsTbl>>() {
-        @Override
-        public void onChanged(java.util.List<shoppingListsTbl> shoppingListsTbls) {
-            shoppingListObserver.notifyAll();
-        }
-    };
-
-    // Creating adapter
-    SLlistAdapter adapter=new SLlistAdapter(diffCallback);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_lists);
 
+        final slViewModel viewModel=new ViewModelProvider(this).get(slViewModel.class);
+
+        LiveData<List<shoppingListsTbl>> slRec= viewModel.getSLrecords();
+
+        Context context=getApplicationContext();
+
+        @NonNull
+        DiffUtil.ItemCallback<shoppingListsTbl> diffCallback=new SLlistAdapter.SLdiff();
+
+        RecyclerView recyclerView = findViewById(R.id.list_recycler);
+
+        final SLlistAdapter adapter = new SLlistAdapter(new SLlistAdapter.SLdiff(),context,slRec);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Creating observer
+        @NonNull
+        final
+        Observer<? super List<shoppingListsTbl>> slObserver = (Observer<List<shoppingListsTbl>>) slTbls -> {
+            Log.d(TAG,"CatObserver");
+            adapter.submitList((List<shoppingListsTbl>) slTbls);
+            //adapter.notifyDataSetChanged();
+        };
+
         // setting up viewModel and observer
-        viewModel=new ViewModelProvider(this).get(slViewModel.class);
-        viewModel.getSLrecords().observe(this, shoppingListObserver->{adapter.submitList(shoppingListObserver);});
+        viewModel.getSLrecords().observe(this, slObserver);
 
         Log.d(TAG, "onCreate: created.");
 
         // Connecting buttons in XML file to Button objects in java class
         final FloatingActionButton newListBtn = findViewById(R.id.new_list_btn);
         final Button returnBtn = findViewById(R.id.return_btn);
-        initRecyclerView();
 
         // Setting up actions for buttons.
         //To do: consolidate into 1 OnClickListener as in the main activity
@@ -98,7 +106,7 @@ public class ShoppingListsActivity extends AppCompatActivity {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        saveData(input1.getText().toString(),input2.getText().toString());
+                        saveData(input1.getText().toString(),input2.getText().toString(),false,viewModel,slRec);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -113,24 +121,12 @@ public class ShoppingListsActivity extends AppCompatActivity {
         });
     }
 
-    // Setting up the recyclerView
-    private void initRecyclerView(){
-        Log.d(TAG, "initRecyclerView: init recyclerView.");
-
-        RecyclerView recyclerView=findViewById(R.id.list_recycler);
-        final SLlistAdapter adapter=new SLlistAdapter(new SLlistAdapter.SLdiff());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
 
     // Write methods
-    public void saveData(String name) {
-        shoppingListsTbl newRecord=new shoppingListsTbl(name,"",false);
+    public void saveData(String name, String item, boolean isObtained, slViewModel viewModel, LiveData<List<shoppingListsTbl>> slRec) {
+        shoppingListsTbl newRecord=new shoppingListsTbl(name,item,isObtained);
         viewModel.insert(newRecord);
+        slRec=viewModel.getSLrecords();
     }
 
-    public void saveData(String name, String item) {
-        shoppingListsTbl newRecord=new shoppingListsTbl(name,item,false);
-        viewModel.insert(newRecord);
-    }
 }

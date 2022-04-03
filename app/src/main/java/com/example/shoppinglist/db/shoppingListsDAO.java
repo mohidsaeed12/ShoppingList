@@ -24,6 +24,9 @@ public interface shoppingListsDAO {
     @Query("SELECT DISTINCT list_name FROM shoppingListsTbl")
     LiveData<List<String>> shoppingListNames();
 
+    @Query("SELECT DISTINCT list_name FROM shoppingListsTbl")
+    List<String> workaroundShoppingListNames();
+
     // Lists intersection of items with a single shopping list
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT itemsTbl.category,itemsTbl.item_name "+
@@ -43,4 +46,7 @@ public interface shoppingListsDAO {
     // List of all shopping lists and items in them
     @Query("SELECT * FROM shoppingListsTbl")
     LiveData<List<shoppingListsTbl>> shoppingListRecords();
+
+    @Query("SELECT * FROM shoppingListsTbl")
+    List<shoppingListsTbl> workaroundShoppingListRecords();
 }
