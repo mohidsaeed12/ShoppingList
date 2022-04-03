@@ -1,6 +1,7 @@
 package com.example.shoppinglist.db;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -13,6 +14,9 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {itemsTbl.class, shoppingListsTbl.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase{
+
+    public static String TAG="***AppDatabase";
+    int log=Log.d(TAG,"Starting database");
 
     // One Data Access Object for each table
     public abstract itemsDAO itemsDao();
@@ -46,6 +50,7 @@ public abstract class AppDatabase extends RoomDatabase{
 
     // Attempt to use a Callback to add some data
     private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase dbSQLite) {
             super.onCreate(dbSQLite);

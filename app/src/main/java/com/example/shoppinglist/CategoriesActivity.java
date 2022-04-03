@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -24,46 +26,66 @@ import com.example.shoppinglist.adaptersandviews.catViewModel;
 import com.example.shoppinglist.db.itemsTbl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import static android.widget.LinearLayout.VERTICAL;
 
-public class CategoriesActivity extends AppCompatActivity {
+public class CategoriesActivity extends AppCompatActivity implements LifecycleOwner {
     // Only used for logging and debugging purposes
-    private static final String TAG = "categoriesActivity";
-
-    // Declaring a viewModel
-    private catViewModel viewModel;
-
-    // Setting up item Callback
-    @NonNull
-    DiffUtil.ItemCallback<itemsTbl> diffCallback=new catListAdapter.catDiff();
-
-    // Creating observer
-    @NonNull
-    Observer<? super java.util.List<itemsTbl>> catObserver=new Observer<java.util.List<itemsTbl>>(){
-        @Override
-        public void onChanged(java.util.List<itemsTbl> itemsTbls){
-            catObserver.notifyAll();
-        }
-    };
-
-    // Creating adapter
-    catListAdapter adapter=new catListAdapter(diffCallback);
+    final String TAG = "***categoriesActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
+        // Declaring a viewModel
+        final catViewModel viewModel=new ViewModelProvider(this).get(catViewModel.class);
+
+        LiveData<List<itemsTbl>> catItemObject= viewModel.getAllItems();
+
+        Context context=getApplicationContext();
+        // Setting up item Callback
+        @NonNull
+        DiffUtil.ItemCallback<itemsTbl> diffCallback=new catListAdapter.catDiff();
+
+        Log.d(TAG, "init recyclerView.");
+        RecyclerView recyclerView = findViewById(R.id.category_recycler);
+
+        Log.d(TAG, "init adapter");
+        final catListAdapter adapter = new catListAdapter(new catListAdapter.catDiff(),context,catItemObject);
+
+        Log.d(TAG, "set adapter.");
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Creating observer
+        @NonNull
+        final
+        Observer<? super List<itemsTbl>> catObserver = (Observer<List<itemsTbl>>) itemsTbls -> {
+            Log.d(TAG,"CatObserver");
+            adapter.submitList((List<itemsTbl>) itemsTbls);
+            //adapter.notifyDataSetChanged();
+        };
+
+        @NonNull
+        Observer<? super java.util.List<itemsTbl>> catAndItemObserver= (Observer<List<itemsTbl>>) newItem -> {
+            Log.d(TAG,"observer onChanged method called");
+            adapter.submitList((List<itemsTbl>) newItem);
+            //adapter.notifyDataSetChanged();
+        };
+
         // setting up viewModel and observer
-        viewModel=new ViewModelProvider(this).get(catViewModel.class);
-        viewModel.getAllItems().observe(this, catObserver->{adapter.submitList(catObserver);});
+        //viewModel=new ViewModelProvider(this).get(catViewModel.class);
+        viewModel.getAllItems().observe(this, catObserver);
+        //viewModel.getItemsByCategory().observe(this, catAndItemObserver);
 
         Log.d(TAG, "onCreate: created.");
 
         // Connecting buttons in XML file to Button objects in java class
         final FloatingActionButton newListBtn = findViewById(R.id.new_category_btn);
         final Button returnBtn = findViewById(R.id.return_btn2);
-        initRecyclerView();
+
 
         // Setting up actions for buttons.
         //To do: consolidate into 1 OnClickListener as in the main activity
@@ -98,7 +120,7 @@ public class CategoriesActivity extends AppCompatActivity {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        saveData(input1.getText().toString(),input2.getText().toString());
+                        saveData(input1.getText().toString(),input2.getText().toString(), viewModel, catItemObject);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -112,19 +134,12 @@ public class CategoriesActivity extends AppCompatActivity {
         });
     }
 
-    // Setting up the recyclerView
-    private void initRecyclerView(){
-        Log.d(TAG, "initRecyclerView: init recyclerView.");
-
-        RecyclerView recyclerView = findViewById(R.id.category_recycler);
-        final catListAdapter adapter = new catListAdapter(new catListAdapter.catDiff());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
 
     // Write method
-    public void saveData(String item, String cat) {
+    public void saveData(String cat, String item, catViewModel viewModel, LiveData<List<itemsTbl>> catItemObject) {
+        Log.d(TAG,"saving data");
         itemsTbl newRecord=new itemsTbl(item,cat);
         viewModel.insert(newRecord);
+        catItemObject=viewModel.getAllItems();
     }
 }

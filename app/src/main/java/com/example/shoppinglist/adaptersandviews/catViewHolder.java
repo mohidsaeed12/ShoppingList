@@ -1,38 +1,45 @@
 package com.example.shoppinglist.adaptersandviews;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shoppinglist.R;
 
 public class catViewHolder extends RecyclerView.ViewHolder {
+    private static final String TAG = "***catViewHolder: ";
     // Declaring View items
-    private final TextView catItemView;
-    private static TextView catNameTxt;
-    private static TextView catItemTxt;
+    //public final TextView catItemView;
+    public static TextView catNameTxt;
+    public static TextView catItemTxt;
 
     // Constructor
-    public catViewHolder(@NonNull View itemView) {
+    public catViewHolder(View itemView) {
         super(itemView);
-        catItemView=itemView.findViewById(R.id.textView);
-        catNameTxt=itemView.findViewById(R.id.cat_category_name_text);
-        catItemTxt=itemView.findViewById(R.id.cat_item_name_text);
+        //catItemView=itemView.findViewById(R.id.textView);
+        this.catNameTxt=itemView.findViewById(R.id.cat_category_name_text);
+        this.catItemTxt=itemView.findViewById(R.id.cat_item_name_text);
+        Log.d(TAG, "constructor");
     }
 
     // Binding to adapter
-    public void bind(String cat,String item){catNameTxt.setText(cat);catItemTxt.setText(item);}
+    public void bind(final catViewModel viewModel, int i){
+        Log.d(TAG, "bind");
+        catNameTxt.setText(viewModel.getAllItemsSync().get(i).getItem_name());
+        catNameTxt.setText(viewModel.getAllItemsSync().get(i).getCategory_name());
+    }
 
     // Preparing to inflate the layout
-    private static RelativeLayout parentLayout;
+    public static RelativeLayout parentLayout;
 
     // Inflate the layout
-    static catViewHolder create(ViewGroup parent){
+    public static catViewHolder create(ViewGroup parent){
+        Log.d(TAG, "create");
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.cat_recyclerview, parent, false);
         catItemTxt = view.findViewById(R.id.cat_item_name_text);
         catNameTxt = view.findViewById(R.id.cat_category_name_text);

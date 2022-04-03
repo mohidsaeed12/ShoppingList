@@ -28,7 +28,7 @@ import static androidx.recyclerview.widget.DiffUtil.ItemCallback;
 
 public class ShoppingListsActivity extends AppCompatActivity {
     // Only used for logging and debugging purposes
-    private static final String TAG = "ShoppingListsActivity";
+    private static final String TAG = "*ShoppingListsActivity";
 
     // Declaring a viewModel
     private slViewModel viewModel;

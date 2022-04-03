@@ -1,14 +1,20 @@
 package com.example.shoppinglist;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.shoppinglist.db.*;
-import com.example.shoppinglist.datatuples.*;
-
+import com.example.shoppinglist.datatuples.SLrecordTuple;
+import com.example.shoppinglist.datatuples.item_obtained_tuple;
+import com.example.shoppinglist.db.AppDatabase;
+import com.example.shoppinglist.db.itemsDAO;
+import com.example.shoppinglist.db.itemsTbl;
+import com.example.shoppinglist.db.shoppingListsDAO;
+import com.example.shoppinglist.db.shoppingListsTbl;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class dataRepository {
     // Declaring data access objects
@@ -49,6 +55,8 @@ public class dataRepository {
     public LiveData<List<itemsTbl>> localCatAllItems;
     public LiveData<List<itemsTbl>> localCatItemsByCat;
 
+    public List<itemsTbl> localCatAllItemsSync;
+
 
     public dataRepository(Application application){
         // Setting up the connection between the repository and the database
@@ -65,8 +73,51 @@ public class dataRepository {
 
         localCatNames=localItemsDao.categoryNames();
         localCatAllItems=localItemsDao.showAllItems();
-        localCatItemsByCat=localItemsDao.itemsByCategory(selectCategory);
+        localCatItemsByCat=localItemsDao.itemsByCategory(getSelectCategory());
+
+        localCatAllItemsSync=getItemsAsync();
     }
+
+    public List<itemsTbl> getItemsAsync(){
+        List<itemsTbl> temp = null;
+        try {
+            temp= new getItemsAsynchronously(localItemsDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return temp;
+    }
+
+    private static class getItemsAsynchronously extends AsyncTask<Void, Void, List<itemsTbl>>{
+
+        private itemsDAO itemsDao;
+
+        getItemsAsynchronously(itemsDAO itemsDao){
+            this.itemsDao=itemsDao;
+        }
+
+        @Override
+        protected List<itemsTbl> doInBackground(Void... voids) {
+            return itemsDao.workaroundShowAllItems();
+        }
+    }
+
+    /*private static class getItemsAsynchronously extends AsyncTask<itemsTbl, Void, itemsTbl[]> {
+
+        private itemsDAO itemsDao;
+
+        getItemsAsynchronously(itemsDAO itemsDao){
+            this.itemsDao=itemsDao;
+        }
+
+        @Override
+        protected itemsTbl[] doInBackground(itemsTbl... itemsTbls) {
+            itemsDao.workaroundShowAllItems();
+            return itemsTbls;
+        }
+    }*/
 
     // Setting up write access to the database
     public void SLinsert(shoppingListsTbl shoppingListObject){

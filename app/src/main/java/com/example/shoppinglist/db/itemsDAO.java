@@ -26,10 +26,14 @@ public interface itemsDAO {
     LiveData<List<String>> categoryNames();
 
     // Showing all items and the categories to which they belong
-    @RewriteQueriesToDropUnusedColumns
     @Query("SELECT itemsTbl.category,itemsTbl.item_name "+
             "FROM itemsTbl")
     LiveData<List<itemsTbl>> showAllItems();
+
+    // Showing all items and the categories to which they belong
+    @Query("SELECT itemsTbl.category,itemsTbl.item_name "+
+            "FROM itemsTbl")
+    List<itemsTbl> workaroundShowAllItems();
 
     // Showing all items within the specified category
     @RewriteQueriesToDropUnusedColumns
