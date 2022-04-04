@@ -96,7 +96,7 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
                             String colors[];
                             colors = colorSelected.split(" ");
                             Category newCat = new Category(input1.getText().toString(), colors[0], colors[1]);
-                            db.addOne(newCat, context);
+                            db.addOne(newCat);
                             catAdapter.notifyDataSetChanged();
                             setAdapter(recyclerView, context);
                         }
