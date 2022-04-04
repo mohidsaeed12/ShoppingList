@@ -5,4 +5,16 @@
     <string name="categories">Categories</string>
     <string name="shopping_lists">Shopping lists</string>
     <string name="clickToReturn">Return</string>
+    
+    <string-array name="color_names">
+        <item>Yellow and Red</item>
+        <item>Black and Yellow</item>
+        <item>Purple and Pink</item>
+    </string-array>
+
+    <string-array name="color_values">
+        <item name ="Yellow and Red">#FCE77D #F96167</item>
+        <item name ="Black and Yellow">#292826 #F9D342</item>
+        <item name ="Purple and Pink">#3D155F #DF678C</item>
+    </string-array>
 </resources>

@@ -1,4 +1,4 @@
-package com.Spring2022CSE3311.shoppinglist;
+package com.Spring2022CSE3311.shoppinglist.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

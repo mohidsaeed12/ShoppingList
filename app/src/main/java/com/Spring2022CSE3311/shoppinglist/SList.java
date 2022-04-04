@@ -1,4 +1,4 @@
-package com.Spring2022CSE3311.shoppinglist.AhmedTesting;
+package com.Spring2022CSE3311.shoppinglist;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -8,20 +8,11 @@ import java.util.List;
 public class SList {
 
     private int id;
-    private List<Item> shoppingList;
     private String listName;
     private String date;
 
-    public SList(int id, List<Item> shoppingList, String listName, String date) {
-        this.id = id;
-        this.shoppingList = shoppingList;
-        this.listName = listName;
-        this.date = date;
-    }
-
     public SList(int id, String listName, String date) {
         this.id = id;
-        this.shoppingList = new ArrayList<>();
         this.listName = listName;
         this.date = date;
     }
@@ -34,14 +25,6 @@ public class SList {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public List<Item> getShoppingList() {
-        return shoppingList;
-    }
-
-    public void setShoppingList(List<Item> shoppingList) {
-        this.shoppingList = shoppingList;
     }
 
     public String getListName() {
@@ -65,7 +48,6 @@ public class SList {
     public String toString() {
         return "SList{" +
                 "id=" + id +
-                ", shoppingList=" + shoppingList +
                 ", listName='" + listName + '\'' +
                 ", date='" + date + '\'' +
                 '}';

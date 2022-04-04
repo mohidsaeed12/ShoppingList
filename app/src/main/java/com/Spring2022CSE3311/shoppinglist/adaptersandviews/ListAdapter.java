@@ -12,8 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Spring2022CSE3311.shoppinglist.SList;
 import com.Spring2022CSE3311.shoppinglist.R;
-import com.Spring2022CSE3311.shoppinglist.Slist;
 
 import java.util.ArrayList;
 
@@ -21,11 +21,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
     private static final String TAG = "CustomAdapter";
 
     // Lists of the list names and dates created
-    private final ArrayList<Slist> lists;
+    private final ArrayList<SList> lists;
     private final Context context;
 
     // Our adapter constructor
-    public ListAdapter(Context context, ArrayList<Slist> lists) {
+    public ListAdapter(Context context, ArrayList<SList> lists) {
         this.lists = lists;
         this.context = context;
     }
@@ -42,12 +42,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
     // Called every time something new is added to the recycler
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called.");
-        holder.listName.setText(lists.get(position).getName());
+        holder.listName.setText(lists.get(position).getListName());
         holder.dateAdded.setText(lists.get(position).getDate());
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, lists.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, lists.get(position).getListName(), Toast.LENGTH_SHORT).show();
             }
         });
     }
