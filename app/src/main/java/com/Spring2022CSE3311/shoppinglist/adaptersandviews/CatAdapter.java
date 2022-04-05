@@ -73,7 +73,7 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> impl
             public void onClick(View view) {
                 DatabaseHelper db = new DatabaseHelper(context);
 
-                editCategory(categories.get(position), db,context, position);
+                editCategory(categories.get(position), db, context);
             }
         });
     }
@@ -83,7 +83,7 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> impl
         return categories.size();
     }
 
-    public void editCategory(Category category, DatabaseHelper db, Context context, int position) {
+    public void editCategory(Category category, DatabaseHelper db, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setTitle("Edit category");
@@ -129,7 +129,7 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> impl
         builder.setNeutralButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                db.deleteOne(categories.get(position));
+                db.deleteOne(category);
                 CategoriesActivity.setAdapter(CategoriesActivity.recyclerView, context);
             }
         });

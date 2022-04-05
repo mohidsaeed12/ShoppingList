@@ -1,11 +1,12 @@
 package com.Spring2022CSE3311.shoppinglist;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SList {
+public class SList implements Serializable {
 
     private int id;
     private String listName;
@@ -15,6 +16,13 @@ public class SList {
         this.id = id;
         this.listName = listName;
         this.date = date;
+    }
+
+    public SList(String listName) {
+        this.id = -1;
+        this.listName = listName;
+        Date today = new Date();
+        this.date = "Date Modified\n" + DateFormat.getDateInstance(DateFormat.SHORT).format(today);
     }
 
     public SList() {}

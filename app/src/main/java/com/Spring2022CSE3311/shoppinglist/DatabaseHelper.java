@@ -30,9 +30,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CATEGORY_BACKGROUND_COLOR = "COLUMN_CATEGORY_BACKGROUND_COLOR";
     public static final String COLUMN_CATEGORY_TEXT_COLOR = "COLUMN_CATEGORY_TEXT_COLOR";
 
-    public static final String COMBINED_TABLE = "COMBINED_TABLE";
-
-
     public DatabaseHelper(@Nullable Context context) {
         super(context, "ShoppingList.db", null, 1);
     }
@@ -51,11 +48,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 COLUMN_CATEGORY_TEXT_COLOR          + " TEXT)";
         sqLiteDatabase.execSQL(createTableStatement);
 
-        createTableStatement = "CREATE TABLE "                  + ITEM_TABLE + "( " +
+        createTableStatement = "CREATE TABLE "                  + ITEM_TABLE  + "( " +
                                 COLUMN_ITEM_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                COLUMN_ITEM_NAME                + " TEXT," +
+                                COLUMN_ITEM_NAME                + " TEXT,"    +
                                 COLUMN_CATEGORY_ID              + " INTEGER," +
-                               "FOREIGN KEY("+COLUMN_CATEGORY_ID+") REFERENCES " + CATEGORY_TABLE + "("+COLUMN_CATEGORY_ID+"))";
+                                COLUMN_SHOPPINGLIST_ID          + " INTEGER," +
+                               "FOREIGN KEY(" + COLUMN_CATEGORY_ID +     ") REFERENCES " + CATEGORY_TABLE     + "(" + COLUMN_CATEGORY_ID     +"), " +
+                               "FOREIGN KEY(" + COLUMN_SHOPPINGLIST_ID + ") REFERENCES " + SHOPPINGLIST_TABLE + "(" + COLUMN_SHOPPINGLIST_ID +"))";
         sqLiteDatabase.execSQL(createTableStatement);
 
         createTableStatement = "CREATE TABLE "                          + SHOPPINGLIST_TABLE + "( " +
@@ -63,15 +62,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 COLUMN_SHOPPINGLIST_NAME                + " TEXT, " +
                                 COLUMN_SHOPPINGLIST_DATE                + " TEXT)";
         sqLiteDatabase.execSQL(createTableStatement);
-
-        createTableStatement = "CREATE TABLE "                      + COMBINED_TABLE + "( " +
-                                COLUMN_SHOPPINGLIST_ID              + " INTEGER," +
-                                COLUMN_ITEM_ID                      + " INTEGER," +
-                               "FOREIGN KEY("+COLUMN_SHOPPINGLIST_ID+") REFERENCES " + SHOPPINGLIST_TABLE + "("+COLUMN_SHOPPINGLIST_ID+")," +
-                               "FOREIGN KEY("+COLUMN_ITEM_ID+        ") REFERENCES " + ITEM_TABLE + "("+COLUMN_ITEM_ID+")," +
-                               "PRIMARY KEY("+COLUMN_SHOPPINGLIST_ID+", "+COLUMN_ITEM_ID+"))";
-        sqLiteDatabase.execSQL(createTableStatement);
-
     }
 
     @Override
@@ -93,7 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean deleteOne(SList list) {
         SQLiteDatabase db = this.getWritableDatabase();
-        long deleted = db.delete(SHOPPINGLIST_TABLE, "COLUMN_CATEGORY_ID=?", new String[] {"" + list.getId()});
+        long deleted = db.delete(SHOPPINGLIST_TABLE, "COLUMN_SHOPPINGLIST_ID=?", new String[] {"" + list.getId()});
         db.close();
         return deleted != -1;
     }
@@ -105,7 +95,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_SHOPPINGLIST_NAME, update.getListName());
         cv.put(COLUMN_SHOPPINGLIST_DATE, update.getDate());
 
-        long replaced = db.update(SHOPPINGLIST_TABLE, cv, "COLUMN_CATEGORY_ID=?", new String[] {"" + old.getId()});
+        long replaced = db.update(SHOPPINGLIST_TABLE, cv, "COLUMN_SHOPPINGLIST_ID=?", new String[] {"" + old.getId()});
         db.close();
         return replaced != -1;
     }
@@ -115,8 +105,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_ITEM_NAME, item.getItemName());
-        cv.put(COLUMN_CATEGORY_NAME, item.getItemCategory().getCategoryName());
         cv.put(COLUMN_CATEGORY_ID, item.getItemCategory().getId());
+        cv.put(COLUMN_SHOPPINGLIST_ID, item.getListID());
 
         long inserted = db.insert((ITEM_TABLE), null, cv);
         db.close();
@@ -125,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean deleteOne(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
-        long deleted = db.delete(ITEM_TABLE, "COLUMN_CATEGORY_ID=?", new String[] {"" + item.getId()});
+        long deleted = db.delete(ITEM_TABLE, "COLUMN_ITEM_ID=?", new String[] {"" + item.getId()});
         db.close();
         return deleted != -1;
     }
@@ -138,7 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CATEGORY_NAME, update.getItemCategory().getCategoryName());
         cv.put(COLUMN_CATEGORY_ID, update.getItemCategory().getId());
 
-        long replaced = db.update(ITEM_TABLE, cv, "COLUMN_CATEGORY_ID=?", new String[] {"" + old.getId()});
+        long replaced = db.update(ITEM_TABLE, cv, "COLUMN_ITEM_ID=?", new String[] {"" + old.getId()});
         db.close();
         return replaced != -1;
     }
@@ -176,17 +166,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return replaced != -1;
     }
 
-
-
-    // IN PROGRESS
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public List<Item> getShoppingListItems(int listID) {
+    public List<Item> getShoppingListItems(SList list) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Item> items = new ArrayList<>();
 
         String searchQuery =    "SELECT " + COLUMN_ITEM_ID + ", " + COLUMN_ITEM_NAME + ", " + COLUMN_CATEGORY_ID + ", " + COLUMN_CATEGORY_NAME + ", " +
                                  COLUMN_CATEGORY_BACKGROUND_COLOR + ", " + COLUMN_CATEGORY_TEXT_COLOR + " " +
-                                "FROM " + COMBINED_TABLE + " NATURAL JOIN " + SHOPPINGLIST_TABLE + " NATURAL JOIN " + ITEM_TABLE + " NATURAL JOIN " + CATEGORY_TABLE;
+                                "FROM " + SHOPPINGLIST_TABLE + " NATURAL JOIN " + ITEM_TABLE + " AS I NATURAL JOIN " + CATEGORY_TABLE + " " +
+                                "WHERE I." + COLUMN_SHOPPINGLIST_ID + " = " + list.getId();
 
         Cursor cursor = db.rawQuery(searchQuery, null);
 
@@ -200,7 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String textColor = cursor.getString(5);
 
                     Category cat = new Category(catId, catName, backColor, textColor);
-                    Item item = new Item(itemID, itemName, cat);
+                    Item item = new Item(itemID, itemName, cat, list.getId());
 
                     items.add(item);
             } while(cursor.moveToNext());

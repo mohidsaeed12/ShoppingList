@@ -7,11 +7,20 @@ public class Item {
     private int id;
     private String itemName;
     private Category itemCategory;
+    private int listID;
 
-    public Item(int id, String itemName, Category itemCategory) {
+    public Item(int id, String itemName, Category itemCategory, int listID) {
         this.id = id;
         this.itemName = itemName;
         this.itemCategory = itemCategory;
+        this.listID = listID;
+    }
+
+    public Item(String itemName, Category itemCategory, int listID) {
+        this.id = -1;
+        this.itemName = itemName;
+        this.itemCategory = itemCategory;
+        this.listID = listID;
     }
 
     public Item() {}
@@ -38,6 +47,14 @@ public class Item {
 
     public void setItemCategory(Category itemCategory) {
         this.itemCategory = itemCategory;
+    }
+
+    public int getListID() {
+        return listID;
+    }
+
+    public void setListID(int listID) {
+        this.listID = listID;
     }
 
     @Override
