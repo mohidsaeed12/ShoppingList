@@ -42,9 +42,9 @@ public class SLAdapter extends RecyclerView.Adapter<SLAdapter.ViewHolder>{
 
     // ViewHolder Class that is what each item is made of in the recycler.
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView listName;
-        TextView dateAdded;
-        RelativeLayout parentLayout;
+        private final TextView listName;
+        private final TextView dateAdded;
+        private final RelativeLayout parentLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             listName = itemView.findViewById(R.id.list_name_text);

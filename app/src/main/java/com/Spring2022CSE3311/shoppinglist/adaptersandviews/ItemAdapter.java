@@ -11,14 +11,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+
 import androidx.recyclerview.widget.RecyclerView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.Spring2022CSE3311.shoppinglist.DatabaseHelper;
 import com.Spring2022CSE3311.shoppinglist.Item;
@@ -31,8 +33,6 @@ import java.util.List;
 import static android.widget.LinearLayout.VERTICAL;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> implements AdapterView.OnItemSelectedListener{
-    private static final String TAG = "CustomAdapter";
-
     // Lists of the list names and dates created
     private final List<Item> items;
     private final Context context;
@@ -48,9 +48,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
 
     // ViewHolder Class that is what each item is made of in the recycler.
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_itemName;
-        TextView tv_amount;
-        RelativeLayout parentLayout;
+        private final TextView tv_itemName;
+        private final TextView tv_amount;
+        private final ConstraintLayout parentLayout;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_itemName = itemView.findViewById(R.id.tv_itemName);
@@ -62,21 +63,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
 
     @NonNull
     @Override
-    // Creates the view holder. Not too sure how it works but tutorial and docs have this.
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_lists, parent, false);
-        return new ViewHolder(view);
+    public ItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.layout_items, parent, false);
+        return new ItemAdapter.ViewHolder(view);
     }
 
     @Override
     // Called every time something new is added to the recycler
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: called.");
         holder.tv_itemName.setText(items.get(position).getItemName());
-        //holder.tv_itemName.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
+        holder.tv_itemName.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
         holder.tv_amount.setText("1");
-       // holder.tv_amount.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
-        //holder.parentLayout.setBackgroundColor(Integer.decode(items.get(position).getItemCategory().getBackgroundColor()) + 0xFF000000);
+        holder.tv_amount.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
+        holder.parentLayout.setBackgroundColor(Integer.decode(items.get(position).getItemCategory().getBackgroundColor()) + 0xFF000000);
+
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
