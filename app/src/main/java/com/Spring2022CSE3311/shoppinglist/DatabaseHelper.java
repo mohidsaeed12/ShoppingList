@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 COLUMN_CATEGORY_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 COLUMN_CATEGORY_NAME                + " TEXT, " +
                                 COLUMN_CATEGORY_BACKGROUND_COLOR    + " TEXT, " +
-                                COLUMN_CATEGORY_TEXT_COLOR          + " TEXT)";
+                                COLUMN_CATEGORY_TEXT_COLOR          + " TEXT )";
         sqLiteDatabase.execSQL(createTableStatement);
 
         createTableStatement = "CREATE TABLE "                  + ITEM_TABLE  + "( " +
@@ -53,8 +53,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 COLUMN_ITEM_NAME                + " TEXT,"    +
                                 COLUMN_CATEGORY_ID              + " INTEGER," +
                                 COLUMN_SHOPPINGLIST_ID          + " INTEGER," +
-                               "FOREIGN KEY(" + COLUMN_CATEGORY_ID +     ") REFERENCES " + CATEGORY_TABLE     + "(" + COLUMN_CATEGORY_ID     +"), " +
-                               "FOREIGN KEY(" + COLUMN_SHOPPINGLIST_ID + ") REFERENCES " + SHOPPINGLIST_TABLE + "(" + COLUMN_SHOPPINGLIST_ID +"))";
+                               "FOREIGN KEY(" + COLUMN_CATEGORY_ID +     ") REFERENCES " + CATEGORY_TABLE     + "(" + COLUMN_CATEGORY_ID     +") ON DELETE CASCADE, " +
+                               "FOREIGN KEY(" + COLUMN_SHOPPINGLIST_ID + ") REFERENCES " + SHOPPINGLIST_TABLE + "(" + COLUMN_SHOPPINGLIST_ID +") ON DELETE CASCADE)";
         sqLiteDatabase.execSQL(createTableStatement);
 
         createTableStatement = "CREATE TABLE "                          + SHOPPINGLIST_TABLE + "( " +
