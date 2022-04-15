@@ -11,15 +11,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Spring2022CSE3311.shoppinglist.DatabaseHelper;
-import com.Spring2022CSE3311.shoppinglist.SList;
 import com.Spring2022CSE3311.shoppinglist.R;
+import com.Spring2022CSE3311.shoppinglist.SList;
 import com.Spring2022CSE3311.shoppinglist.activities.ListsActivity;
 import com.Spring2022CSE3311.shoppinglist.activities.ShoppingListsActivity;
 
@@ -113,7 +112,7 @@ public class SLAdapter extends RecyclerView.Adapter<SLAdapter.ViewHolder>{
                 ShoppingListsActivity.setAdapter(ShoppingListsActivity.recyclerView, context);
             }
         });
-        builder.setNegativeButton("Enter", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("View items", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent lists2items=new Intent(context, ListsActivity.class);

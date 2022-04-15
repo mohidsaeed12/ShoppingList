@@ -125,8 +125,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_ITEM_NAME, update.getItemName());
-        cv.put(COLUMN_CATEGORY_NAME, update.getItemCategory().getCategoryName());
         cv.put(COLUMN_CATEGORY_ID, update.getItemCategory().getId());
+        cv.put(COLUMN_SHOPPINGLIST_ID, update.getListID());
 
         long replaced = db.update(ITEM_TABLE, cv, "COLUMN_ITEM_ID=?", new String[] {"" + old.getId()});
         db.close();
