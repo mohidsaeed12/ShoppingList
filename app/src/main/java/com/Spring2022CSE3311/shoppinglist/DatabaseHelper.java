@@ -23,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String ITEM_TABLE = "ITEM_TABLE";
     public static final String COLUMN_ITEM_ID = "COLUMN_ITEM_ID";
     public static final String COLUMN_ITEM_NAME = "COLUMN_ITEM_NAME";
+    public static final String COLUMN_ITEM_QUANTITY="COLUMN_ITEM_QUANTITY";
 
     public static final String CATEGORY_TABLE = "CATEGORY_TABLE";
     public static final String COLUMN_CATEGORY_ID = "COLUMN_CATEGORY_ID";
@@ -31,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CATEGORY_TEXT_COLOR = "COLUMN_CATEGORY_TEXT_COLOR";
 
     public DatabaseHelper(@Nullable Context context) {
-        super(context, "ShoppingList.db", null, 1);
+        super(context, "ShoppingList.db", null, 2);
     }
 
 
@@ -51,6 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createTableStatement = "CREATE TABLE "                  + ITEM_TABLE  + "( " +
                                 COLUMN_ITEM_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 COLUMN_ITEM_NAME                + " TEXT,"    +
+                                COLUMN_ITEM_QUANTITY            + " INTEGER," +
                                 COLUMN_CATEGORY_ID              + " INTEGER," +
                                 COLUMN_SHOPPINGLIST_ID          + " INTEGER," +
                                "FOREIGN KEY(" + COLUMN_CATEGORY_ID +     ") REFERENCES " + CATEGORY_TABLE     + "(" + COLUMN_CATEGORY_ID     +") ON DELETE CASCADE, " +
@@ -105,6 +107,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_ITEM_NAME, item.getItemName());
+        cv.put(COLUMN_ITEM_QUANTITY,item.getItemQuantity());
         cv.put(COLUMN_CATEGORY_ID, item.getItemCategory().getId());
         cv.put(COLUMN_SHOPPINGLIST_ID, item.getListID());
 
@@ -125,6 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_ITEM_NAME, update.getItemName());
+        cv.put(COLUMN_ITEM_QUANTITY, update.getItemQuantity());
         cv.put(COLUMN_CATEGORY_ID, update.getItemCategory().getId());
         cv.put(COLUMN_SHOPPINGLIST_ID, update.getListID());
 
@@ -172,7 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Item> items = new ArrayList<>();
 
         String searchQuery =    "SELECT " + COLUMN_ITEM_ID + ", " + COLUMN_ITEM_NAME + ", " + COLUMN_CATEGORY_ID + ", " + COLUMN_CATEGORY_NAME + ", " +
-                                 COLUMN_CATEGORY_BACKGROUND_COLOR + ", " + COLUMN_CATEGORY_TEXT_COLOR + " " +
+                                 COLUMN_CATEGORY_BACKGROUND_COLOR + ", " + COLUMN_CATEGORY_TEXT_COLOR + ", " + COLUMN_ITEM_QUANTITY + " " +
                                 "FROM " + SHOPPINGLIST_TABLE + " NATURAL JOIN " + ITEM_TABLE + " AS I NATURAL JOIN " + CATEGORY_TABLE + " " +
                                 "WHERE I." + COLUMN_SHOPPINGLIST_ID + " = " + list.getId();
 
@@ -186,9 +190,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String catName   = cursor.getString(3);
                     String backColor = cursor.getString(4);
                     String textColor = cursor.getString(5);
+                    int itemQuant    = cursor.getInt(6);
 
                     Category cat = new Category(catId, catName, backColor, textColor);
-                    Item item = new Item(itemID, itemName, cat, list.getId());
+                    Item item = new Item(itemID, itemName, itemQuant, cat, list.getId());
 
                     items.add(item);
             } while(cursor.moveToNext());

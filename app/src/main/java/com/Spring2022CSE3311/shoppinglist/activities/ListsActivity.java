@@ -95,12 +95,16 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
                 input1.setHint("Item Name");
                 layout.addView(input1);
 
-                final Spinner input2 = new Spinner(context);
+                final EditText input2 = new EditText(context);
+                input2.setHint("Item Quantity");
+                layout.addView(input2);
+
+                final Spinner input3 = new Spinner(context);
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, categoryNames);
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                input2.setAdapter(arrayAdapter);
-                input2.setOnItemSelectedListener(listener);
-                layout.addView(input2);
+                input3.setAdapter(arrayAdapter);
+                input3.setOnItemSelectedListener(listener);
+                layout.addView(input3);
 
                 builder.setView(layout);
 
@@ -111,7 +115,11 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(!input1.getText().toString().equals(""))
                         {
-                            Item newItem = new Item(input1.getText().toString(), categories.get(position), list.getId());
+                            int temp=1;
+                            if(!input2.getText().toString().isEmpty()&&Integer.decode(input2.getText().toString()).intValue()>0) {
+                                temp = Integer.decode(input2.getText().toString()).intValue();
+                            }
+                            Item newItem = new Item(input1.getText().toString(), temp, categories.get(position), list.getId());
                             db.addOne(newItem);
                             itemAdapter.notifyDataSetChanged();
                             setAdapter(recyclerView, context);

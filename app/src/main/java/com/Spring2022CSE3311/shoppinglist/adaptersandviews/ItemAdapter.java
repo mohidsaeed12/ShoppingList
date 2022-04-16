@@ -71,7 +71,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tv_itemName.setText(items.get(position).getItemName());
         holder.tv_itemName.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
-        holder.tv_amount.setText("1");
+        holder.tv_amount.setText(Integer.toString(items.get(position).getItemQuantity()));
         holder.tv_amount.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
         holder.parentLayout.setBackgroundColor(Integer.decode(items.get(position).getItemCategory().getBackgroundColor()) + 0xFF000000);
 
@@ -107,12 +107,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
         input1.setHint("Item Name");
         layout.addView(input1);
 
-        final Spinner input2 = new Spinner(context);
+        final EditText input2 = new EditText(context);
+        input2.setHint("Item Quantity");
+        layout.addView(input2);
+
+        final Spinner input3 = new Spinner(context);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, ListsActivity.categoryNames);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        input2.setAdapter(arrayAdapter);
-        input2.setOnItemSelectedListener(listener);
-        layout.addView(input2);
+        input3.setAdapter(arrayAdapter);
+        input3.setOnItemSelectedListener(listener);
+        layout.addView(input3);
 
         builder.setView(layout);
 
@@ -122,8 +126,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String name;
+                int quant;
                 name = (input1.getText().toString().equals(""))? item.getItemName() : input1.getText().toString();
-                Item newItem = new Item(name,ListsActivity.categories.get(position), item.getListID());
+                quant= (input2.getText().toString().equals(""))? item.getItemQuantity() : Integer.decode(input2.getText().toString()).intValue();
+                Item newItem = new Item(name,quant ,ListsActivity.categories.get(position), item.getListID());
                 db.updateOne(item, newItem);
                 ListsActivity.setAdapter(ListsActivity.recyclerView, context);
             }

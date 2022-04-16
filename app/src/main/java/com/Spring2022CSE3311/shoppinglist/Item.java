@@ -6,8 +6,24 @@ public class Item {
 
     private int id;
     private String itemName;
+    int itemQuantity;
     private Category itemCategory;
     private int listID;
+
+    public Item(int id, String itemName, int itemQuantity, Category itemCategory, int listID) {
+        this.id = id;
+        this.itemName = itemName;
+        this.itemQuantity=itemQuantity;
+        this.itemCategory = itemCategory;
+        this.listID = listID;
+    }
+
+    public Item(String itemName, int itemQuantity, Category itemCategory, int listID) {
+        this.itemName = itemName;
+        this.itemQuantity=itemQuantity;
+        this.itemCategory = itemCategory;
+        this.listID = listID;
+    }
 
     public Item(int id, String itemName, Category itemCategory, int listID) {
         this.id = id;
@@ -64,6 +80,10 @@ public class Item {
                 ", itemName='" + itemName + '\'' +
                 ", itemCategory=" + itemCategory +
                 '}';
+    }
+
+    public int getItemQuantity() {
+        return itemQuantity;
     }
 
     // Sorts Items by category then by name for now.
