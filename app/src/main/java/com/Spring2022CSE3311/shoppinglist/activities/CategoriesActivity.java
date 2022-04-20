@@ -1,16 +1,10 @@
 package com.Spring2022CSE3311.shoppinglist.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,11 +12,20 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.Spring2022CSE3311.shoppinglist.Category;
 import com.Spring2022CSE3311.shoppinglist.DatabaseHelper;
 import com.Spring2022CSE3311.shoppinglist.R;
 import com.Spring2022CSE3311.shoppinglist.adaptersandviews.CatAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Collections;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -55,6 +58,8 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
         db = new DatabaseHelper(this);
 
         recyclerView = findViewById(R.id.rv_categories);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         setAdapter(recyclerView, this);
 
         btn_return = findViewById(R.id.btn_return);
@@ -78,12 +83,16 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
                 input1.setHint("Category Name");
                 layout.addView(input1);
 
-                final Spinner input2 = new Spinner(context);
+                final EditText input2 = new EditText(context);
+                input2.setHint("Place in sort order");
+                layout.addView(input2);
+
+                final Spinner input3 = new Spinner(context);
                 ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(context, R.array.color_names, android.R.layout.simple_spinner_item);
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                input2.setAdapter(arrayAdapter);
-                input2.setOnItemSelectedListener(listener);
-                layout.addView(input2);
+                input3.setAdapter(arrayAdapter);
+                input3.setOnItemSelectedListener(listener);
+                layout.addView(input3);
 
                 builder.setView(layout);
 
@@ -94,8 +103,10 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
                         if(!input1.getText().toString().equals(""))
                         {
                             String colors[];
+                            int rank;
+                            rank=(input2.getText().toString().equals(""))? 1 : Integer.decode(input2.getText().toString());
                             colors = colorSelected.split(" ");
-                            Category newCat = new Category(input1.getText().toString(), colors[0], colors[1]);
+                            Category newCat = new Category(input1.getText().toString(), colors[0], colors[1], rank);
                             db.addOne(newCat);
                             catAdapter.notifyDataSetChanged();
                             setAdapter(recyclerView, context);
@@ -122,6 +133,22 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
             }
         });
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+            Collections.swap(db.getCategories(), fromPosition, toPosition);
+            recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    } ;
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

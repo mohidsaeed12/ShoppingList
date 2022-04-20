@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:foreground="?attr/selectableItemBackground"
     tools:context=".activities.CategoriesActivity">
     <Button
         android:id="@+id/btn_return"
@@ -57,6 +58,7 @@
         android:id="@+id/rv_categories"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

@@ -10,36 +10,22 @@ public class Item {
     private Category itemCategory;
     private int listID;
 
-    public Item(int id, String itemName, int itemQuantity, Category itemCategory, int listID) {
-        this.id = id;
-        this.itemName = itemName;
-        this.itemQuantity=itemQuantity;
-        this.itemCategory = itemCategory;
-        this.listID = listID;
-    }
+    public Item() {}
 
     public Item(String itemName, int itemQuantity, Category itemCategory, int listID) {
+        this();
         this.itemName = itemName;
         this.itemQuantity=itemQuantity;
         this.itemCategory = itemCategory;
         this.listID = listID;
     }
 
-    public Item(int id, String itemName, Category itemCategory, int listID) {
+    public Item(int id, String itemName, int itemQuantity, Category itemCategory, int listID) {
+        this(itemName,itemQuantity,itemCategory,listID);
         this.id = id;
-        this.itemName = itemName;
-        this.itemCategory = itemCategory;
-        this.listID = listID;
     }
 
-    public Item(String itemName, Category itemCategory, int listID) {
-        this.id = -1;
-        this.itemName = itemName;
-        this.itemCategory = itemCategory;
-        this.listID = listID;
-    }
 
-    public Item() {}
 
     public int getId() {
         return id;
@@ -86,14 +72,14 @@ public class Item {
         return itemQuantity;
     }
 
-    // Sorts Items by category then by name for now.
+    // Sorts Items 1st by category rank, 2nd by category name, 3rd by item name for now.
     static class ItemComparator implements Comparator<Item>{
-
         @Override
         public int compare(Item item, Item t1) {
-            int catCompare = item.getItemCategory().getCategoryName().compareTo(t1.getItemCategory().getCategoryName());
+            int catCompare = item.getItemCategory().getCategoryRank()-t1.getItemCategory().getCategoryRank();
+            int catNameCompare =item.getItemCategory().getCategoryName().compareTo(t1.getItemCategory().getCategoryName());
             int nameCompare = item.getItemName().compareTo(t1.getItemName());
-            return (catCompare == 0) ? nameCompare : catCompare;
+            return (catCompare == 0) ? ((catNameCompare==0)? nameCompare: catNameCompare) : catCompare;
         }
     }
 }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -30,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CATEGORY_NAME = "COLUMN_CATEGORY_NAME";
     public static final String COLUMN_CATEGORY_BACKGROUND_COLOR = "COLUMN_CATEGORY_BACKGROUND_COLOR";
     public static final String COLUMN_CATEGORY_TEXT_COLOR = "COLUMN_CATEGORY_TEXT_COLOR";
+    public static final String COLUMN_CATEGORY_RANK="COLUMN_CATEGORY_RANK";
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, "ShoppingList.db", null, 2);
@@ -46,7 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 COLUMN_CATEGORY_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                 COLUMN_CATEGORY_NAME                + " TEXT, " +
                                 COLUMN_CATEGORY_BACKGROUND_COLOR    + " TEXT, " +
-                                COLUMN_CATEGORY_TEXT_COLOR          + " TEXT )";
+                                COLUMN_CATEGORY_TEXT_COLOR          + " TEXT, " +
+                                COLUMN_CATEGORY_RANK                + " INTEGER)";
         sqLiteDatabase.execSQL(createTableStatement);
 
         createTableStatement = "CREATE TABLE "                  + ITEM_TABLE  + "( " +
@@ -144,6 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CATEGORY_NAME, category.getCategoryName());
         cv.put(COLUMN_CATEGORY_BACKGROUND_COLOR, category.getBackgroundColor());
         cv.put(COLUMN_CATEGORY_TEXT_COLOR, category.getTextColor());
+        cv.put(COLUMN_CATEGORY_RANK, category.getCategoryRank());
 
         long inserted = db.insert(CATEGORY_TABLE, null, cv);
         db.close();
@@ -164,6 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CATEGORY_NAME, update.getCategoryName());
         cv.put(COLUMN_CATEGORY_BACKGROUND_COLOR, update.getBackgroundColor());
         cv.put(COLUMN_CATEGORY_TEXT_COLOR, update.getTextColor());
+        cv.put(COLUMN_CATEGORY_RANK, update.getCategoryRank());
 
         long replaced = db.update(CATEGORY_TABLE, cv, "COLUMN_CATEGORY_ID=?", new String[] {"" + old.getId()});
         db.close();
@@ -176,9 +181,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Item> items = new ArrayList<>();
 
         String searchQuery =    "SELECT " + COLUMN_ITEM_ID + ", " + COLUMN_ITEM_NAME + ", " + COLUMN_CATEGORY_ID + ", " + COLUMN_CATEGORY_NAME + ", " +
-                                 COLUMN_CATEGORY_BACKGROUND_COLOR + ", " + COLUMN_CATEGORY_TEXT_COLOR + ", " + COLUMN_ITEM_QUANTITY + " " +
+                                 COLUMN_CATEGORY_BACKGROUND_COLOR + ", " + COLUMN_CATEGORY_TEXT_COLOR + ", " + COLUMN_ITEM_QUANTITY + ", " + COLUMN_CATEGORY_RANK + " "+
                                 "FROM " + SHOPPINGLIST_TABLE + " NATURAL JOIN " + ITEM_TABLE + " AS I NATURAL JOIN " + CATEGORY_TABLE + " " +
-                                "WHERE I." + COLUMN_SHOPPINGLIST_ID + " = " + list.getId();
+                                "WHERE I." + COLUMN_SHOPPINGLIST_ID + " = " + list.getId()+
+                                " ORDER BY " + COLUMN_CATEGORY_RANK + ", " + COLUMN_ITEM_NAME;
+
 
         Cursor cursor = db.rawQuery(searchQuery, null);
 
@@ -191,8 +198,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String backColor = cursor.getString(4);
                     String textColor = cursor.getString(5);
                     int itemQuant    = cursor.getInt(6);
+                    int catRank      = cursor.getInt(7);
 
-                    Category cat = new Category(catId, catName, backColor, textColor);
+                    Category cat = new Category(catId, catName, backColor, textColor, catRank);
                     Item item = new Item(itemID, itemName, itemQuant, cat, list.getId());
 
                     items.add(item);
@@ -212,8 +220,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Category> categories = new ArrayList<>();
 
-        String searchQuery =    "SELECT " + COLUMN_CATEGORY_ID + ", " + COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_BACKGROUND_COLOR + ", " + COLUMN_CATEGORY_TEXT_COLOR + " " +
-                "FROM " + CATEGORY_TABLE;
+        String searchQuery =    "SELECT " + COLUMN_CATEGORY_ID + ", " + COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_BACKGROUND_COLOR + ", "
+                + COLUMN_CATEGORY_TEXT_COLOR + ", " + COLUMN_CATEGORY_RANK + " "+
+                "FROM " + CATEGORY_TABLE +
+                " ORDER BY " + COLUMN_CATEGORY_RANK;
+
 
         Cursor cursor = db.rawQuery(searchQuery, null);
 
@@ -224,8 +235,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String catName   = cursor.getString(1);
                 String backColor = cursor.getString(2);
                 String textColor = cursor.getString(3);
+                int rank         = cursor.getInt(4);
 
-                Category cat = new Category(catId, catName, backColor, textColor);
+                Category cat = new Category(catId, catName, backColor, textColor, rank);
 
                 categories.add(cat);
             } while(cursor.moveToNext());

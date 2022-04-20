@@ -2,9 +2,7 @@ package com.Spring2022CSE3311.shoppinglist;
 
 import java.io.Serializable;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class SList implements Serializable {
 
@@ -12,20 +10,24 @@ public class SList implements Serializable {
     private String listName;
     private String date;
 
+    public SList() {}
+
     public SList(int id, String listName, String date) {
+        this();
         this.id = id;
         this.listName = listName;
         this.date = date;
     }
 
     public SList(String listName) {
+        this();
         this.id = -1;
         this.listName = listName;
         Date today = new Date();
         this.date = "Date Modified\n" + DateFormat.getDateInstance(DateFormat.SHORT).format(today);
     }
 
-    public SList() {}
+
 
     public int getId() {
         return id;

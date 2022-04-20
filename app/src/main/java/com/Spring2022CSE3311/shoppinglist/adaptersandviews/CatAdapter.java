@@ -97,12 +97,18 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> impl
         input1.setHint("Category Name");
         layout.addView(input1);
 
-        final Spinner input2 = new Spinner(context);
+        final EditText input2 = new EditText(context);
+        input2.setHint("Place in sort order");
+        layout.addView(input2);
+
+        final Spinner input3 = new Spinner(context);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(context, R.array.color_names, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        input2.setAdapter(arrayAdapter);
-        input2.setOnItemSelectedListener(listener);
-        layout.addView(input2);
+        input3.setAdapter(arrayAdapter);
+        input3.setOnItemSelectedListener(listener);
+        layout.addView(input3);
+
+
 
         builder.setView(layout);
 
@@ -111,10 +117,12 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> impl
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String name;
+                int rank;
                 name = (input1.getText().toString().equals(""))? category.getCategoryName() : input1.getText().toString();
+                rank=(input2.getText().toString().equals(""))? category.getCategoryRank() : Integer.decode(input2.getText().toString());
                 String colors[];
                 colors = colorSelected.split(" ");
-                Category newCat = new Category(name, colors[0], colors[1]);
+                Category newCat = new Category(name, colors[0], colors[1], rank);
                 db.updateOne(category, newCat);
                 CategoriesActivity.setAdapter(CategoriesActivity.recyclerView, context);
             }

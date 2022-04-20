@@ -72,6 +72,10 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         }
 
         recyclerView = findViewById(R.id.rv_items);
+
+        //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        //itemTouchHelper.attachToRecyclerView(recyclerView);
+
         setAdapter(recyclerView, this);
 
         btn_return = findViewById(R.id.btn_return3);
@@ -146,6 +150,22 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
     }
+
+    /*ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+            Collections.swap(categories, fromPosition, toPosition);
+            recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    } ;*/
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
