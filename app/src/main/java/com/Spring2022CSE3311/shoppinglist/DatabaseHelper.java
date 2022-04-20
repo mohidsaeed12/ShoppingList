@@ -34,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CATEGORY_RANK="COLUMN_CATEGORY_RANK";
 
     public DatabaseHelper(@Nullable Context context) {
-        super(context, "ShoppingList.db", null, 2);
+        super(context, "ShoppingList.db", null, 3);
     }
 
 
@@ -46,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Creates the respective tables by creating a command string then executing it
         createTableStatement = "CREATE TABLE "                      + CATEGORY_TABLE + "( " +
                                 COLUMN_CATEGORY_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                COLUMN_CATEGORY_NAME                + " TEXT, " +
+                                COLUMN_CATEGORY_NAME                + " TEXT UNIQUE, " +
                                 COLUMN_CATEGORY_BACKGROUND_COLOR    + " TEXT, " +
                                 COLUMN_CATEGORY_TEXT_COLOR          + " TEXT, " +
                                 COLUMN_CATEGORY_RANK                + " INTEGER)";
@@ -54,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         createTableStatement = "CREATE TABLE "                  + ITEM_TABLE  + "( " +
                                 COLUMN_ITEM_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                COLUMN_ITEM_NAME                + " TEXT,"    +
+                                COLUMN_ITEM_NAME                + " TEXT UNIQUE,"    +
                                 COLUMN_ITEM_QUANTITY            + " INTEGER," +
                                 COLUMN_CATEGORY_ID              + " INTEGER," +
                                 COLUMN_SHOPPINGLIST_ID          + " INTEGER," +
@@ -64,14 +64,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         createTableStatement = "CREATE TABLE "                          + SHOPPINGLIST_TABLE + "( " +
                                 COLUMN_SHOPPINGLIST_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                                COLUMN_SHOPPINGLIST_NAME                + " TEXT, " +
+                                COLUMN_SHOPPINGLIST_NAME                + " TEXT UNIQUE, " +
                                 COLUMN_SHOPPINGLIST_DATE                + " TEXT)";
         sqLiteDatabase.execSQL(createTableStatement);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL("DROP TABLE ITEM_TABLE");
+        sqLiteDatabase.execSQL("DROP TABLE CATEGORY_TABLE");
+        sqLiteDatabase.execSQL("DROP TABLE SHOPPINGLIST_TABLE");
 
+        String createTableStatement = "";
+
+        // Creates the respective tables by creating a command string then executing it
+        createTableStatement = "CREATE TABLE "                      + CATEGORY_TABLE + "( " +
+                COLUMN_CATEGORY_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_CATEGORY_NAME                + " TEXT UNIQUE, " +
+                COLUMN_CATEGORY_BACKGROUND_COLOR    + " TEXT, " +
+                COLUMN_CATEGORY_TEXT_COLOR          + " TEXT, " +
+                COLUMN_CATEGORY_RANK                + " INTEGER)";
+        sqLiteDatabase.execSQL(createTableStatement);
+
+        createTableStatement = "CREATE TABLE "                  + ITEM_TABLE  + "( " +
+                COLUMN_ITEM_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_ITEM_NAME                + " TEXT UNIQUE,"    +
+                COLUMN_ITEM_QUANTITY            + " INTEGER," +
+                COLUMN_CATEGORY_ID              + " INTEGER," +
+                COLUMN_SHOPPINGLIST_ID          + " INTEGER," +
+                "FOREIGN KEY(" + COLUMN_CATEGORY_ID +     ") REFERENCES " + CATEGORY_TABLE     + "(" + COLUMN_CATEGORY_ID     +") ON DELETE CASCADE, " +
+                "FOREIGN KEY(" + COLUMN_SHOPPINGLIST_ID + ") REFERENCES " + SHOPPINGLIST_TABLE + "(" + COLUMN_SHOPPINGLIST_ID +") ON DELETE CASCADE)";
+        sqLiteDatabase.execSQL(createTableStatement);
+
+        createTableStatement = "CREATE TABLE "                          + SHOPPINGLIST_TABLE + "( " +
+                COLUMN_SHOPPINGLIST_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_SHOPPINGLIST_NAME                + " TEXT UNIQUE, " +
+                COLUMN_SHOPPINGLIST_DATE                + " TEXT)";
+        sqLiteDatabase.execSQL(createTableStatement);
     }
 
     public boolean addOne(SList list) {
@@ -81,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_SHOPPINGLIST_NAME, list.getListName());
         cv.put(COLUMN_SHOPPINGLIST_DATE, list.getDate());
 
-        long inserted = db.insert(SHOPPINGLIST_TABLE, null, cv);
+        long inserted=db.insertWithOnConflict(SHOPPINGLIST_TABLE, null, cv,SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
         return inserted != -1;
     }
@@ -100,7 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_SHOPPINGLIST_NAME, update.getListName());
         cv.put(COLUMN_SHOPPINGLIST_DATE, update.getDate());
 
-        long replaced = db.update(SHOPPINGLIST_TABLE, cv, "COLUMN_SHOPPINGLIST_ID=?", new String[] {"" + old.getId()});
+        long replaced = db.updateWithOnConflict(SHOPPINGLIST_TABLE, cv, "COLUMN_SHOPPINGLIST_ID=?", new String[] {"" + old.getId()},SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
         return replaced != -1;
     }
@@ -114,7 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CATEGORY_ID, item.getItemCategory().getId());
         cv.put(COLUMN_SHOPPINGLIST_ID, item.getListID());
 
-        long inserted = db.insert((ITEM_TABLE), null, cv);
+        long inserted = db.insertWithOnConflict((ITEM_TABLE), null, cv,SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
         return inserted != -1;
     }
@@ -135,7 +164,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CATEGORY_ID, update.getItemCategory().getId());
         cv.put(COLUMN_SHOPPINGLIST_ID, update.getListID());
 
-        long replaced = db.update(ITEM_TABLE, cv, "COLUMN_ITEM_ID=?", new String[] {"" + old.getId()});
+        long replaced = db.updateWithOnConflict(ITEM_TABLE, cv, "COLUMN_ITEM_ID=?", new String[] {"" + old.getId()},SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
         return replaced != -1;
     }
@@ -149,7 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CATEGORY_TEXT_COLOR, category.getTextColor());
         cv.put(COLUMN_CATEGORY_RANK, category.getCategoryRank());
 
-        long inserted = db.insert(CATEGORY_TABLE, null, cv);
+        long inserted = db.insertWithOnConflict(CATEGORY_TABLE, null, cv,SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
         return inserted != -1;
     }
@@ -170,7 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CATEGORY_TEXT_COLOR, update.getTextColor());
         cv.put(COLUMN_CATEGORY_RANK, update.getCategoryRank());
 
-        long replaced = db.update(CATEGORY_TABLE, cv, "COLUMN_CATEGORY_ID=?", new String[] {"" + old.getId()});
+        long replaced = db.updateWithOnConflict(CATEGORY_TABLE, cv, "COLUMN_CATEGORY_ID=?", new String[] {"" + old.getId()},SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
         return replaced != -1;
     }
