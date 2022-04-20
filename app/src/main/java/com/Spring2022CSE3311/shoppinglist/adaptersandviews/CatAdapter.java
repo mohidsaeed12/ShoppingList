@@ -97,9 +97,9 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> impl
         input1.setHint("Category Name");
         layout.addView(input1);
 
-        final EditText input2 = new EditText(context);
+        /*final EditText input2 = new EditText(context);
         input2.setHint("Place in sort order");
-        layout.addView(input2);
+        layout.addView(input2);*/
 
         final Spinner input3 = new Spinner(context);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(context, R.array.color_names, android.R.layout.simple_spinner_item);
@@ -119,10 +119,11 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.ViewHolder> impl
                 String name;
                 int rank;
                 name = (input1.getText().toString().equals(""))? category.getCategoryName() : input1.getText().toString();
-                rank=(input2.getText().toString().equals(""))? category.getCategoryRank() : Integer.decode(input2.getText().toString());
+                //rank=(input2.getText().toString().equals(""))? category.getCategoryRank() : Integer.decode(input2.getText().toString());
                 String colors[];
                 colors = colorSelected.split(" ");
-                Category newCat = new Category(name, colors[0], colors[1], rank);
+                Category newCat = new Category(name, colors[0], colors[1]);
+                //Category newCat = new Category(name, colors[0], colors[1], rank);
                 db.updateOne(category, newCat);
                 CategoriesActivity.setAdapter(CategoriesActivity.recyclerView, context);
             }

@@ -26,6 +26,7 @@ import com.Spring2022CSE3311.shoppinglist.adaptersandviews.CatAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Collections;
+import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -83,9 +84,9 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
                 input1.setHint("Category Name");
                 layout.addView(input1);
 
-                final EditText input2 = new EditText(context);
+                /*final EditText input2 = new EditText(context);
                 input2.setHint("Place in sort order");
-                layout.addView(input2);
+                layout.addView(input2);*/
 
                 final Spinner input3 = new Spinner(context);
                 ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(context, R.array.color_names, android.R.layout.simple_spinner_item);
@@ -103,10 +104,11 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
                         if(!input1.getText().toString().equals(""))
                         {
                             String colors[];
-                            int rank;
-                            rank=(input2.getText().toString().equals(""))? 1 : Integer.decode(input2.getText().toString());
+                            //int rank;
+                            //rank=(input2.getText().toString().equals(""))? 1 : Integer.decode(input2.getText().toString());
                             colors = colorSelected.split(" ");
-                            Category newCat = new Category(input1.getText().toString(), colors[0], colors[1], rank);
+                            Category newCat = new Category(input1.getText().toString(), colors[0], colors[1]);
+                            //Category newCat = new Category(input1.getText().toString(), colors[0], colors[1], rank);
                             db.addOne(newCat);
                             catAdapter.notifyDataSetChanged();
                             setAdapter(recyclerView, context);
@@ -134,6 +136,8 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
         });
     }
 
+
+
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -141,7 +145,14 @@ public class CategoriesActivity extends AppCompatActivity implements AdapterView
             int toPosition = target.getAdapterPosition();
             Collections.swap(db.getCategories(), fromPosition, toPosition);
             recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
-            return false;
+            List<Category> catList=db.getCategories();
+            Collections.swap(catList, fromPosition, toPosition);
+            List<Category> newCatList=catList;
+            for(int i=0;i<db.getCategories().size();i++){
+                newCatList.get(i).setCategoryRank(i);
+                db.updateOne(catList.get(i),newCatList.get(i));
+            }
+            return true;
         }
 
         @Override

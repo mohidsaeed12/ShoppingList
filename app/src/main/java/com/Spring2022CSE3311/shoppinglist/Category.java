@@ -5,7 +5,9 @@ public class Category {
     private int id, rank;
     private String categoryName, backgroundColor, textColor;
 
-    public Category() {}
+    public Category() {
+        this.rank=1;
+    }
 
     public Category(String categoryName, String backgroundColor, String textColor) {
         this();
