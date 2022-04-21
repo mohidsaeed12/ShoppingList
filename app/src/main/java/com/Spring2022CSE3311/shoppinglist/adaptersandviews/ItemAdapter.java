@@ -2,6 +2,7 @@ package com.Spring2022CSE3311.shoppinglist.adaptersandviews;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,11 +74,24 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
     // Called every time something new is added to the recycler
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tv_itemName.setText(items.get(position).getItemName());
-        holder.tv_itemName.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
         holder.tv_amount.setText(Integer.toString(items.get(position).getItemQuantity()));
-        holder.tv_amount.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
         holder.cb_itemObtained.setChecked(items.get(position).getItemObtained());
-        holder.parentLayout.setBackgroundColor(Integer.decode(items.get(position).getItemCategory().getBackgroundColor()) + 0xFF000000);
+
+
+        if(items.get(position).getItemObtained()==true){
+            holder.tv_itemName.setTextColor(0xFF000000);
+            holder.tv_amount.setTextColor(0xFF000000);
+            holder.tv_itemName.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tv_amount.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.parentLayout.setBackgroundColor(0xFFFFFFFF);
+        }
+        else {
+            holder.tv_itemName.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
+            holder.tv_amount.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
+            holder.tv_itemName.setPaintFlags(holder.tv_itemName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.tv_amount.setPaintFlags(holder.tv_amount.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.parentLayout.setBackgroundColor(Integer.decode(items.get(position).getItemCategory().getBackgroundColor()) + 0xFF000000);
+        }
 
         holder.cb_itemObtained.setOnClickListener(new View.OnClickListener(){
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -85,6 +99,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
             public void onClick(View view) {
                 DatabaseHelper db = new DatabaseHelper(context);
                 items.get(position).setItemObtained(items.get(position).getItemObtained()==false);
+
                 db.updateOne(items.get(position),items.get(position));
                 ListsActivity.setAdapter(ListsActivity.recyclerView, context);
                 notifyDataSetChanged();
