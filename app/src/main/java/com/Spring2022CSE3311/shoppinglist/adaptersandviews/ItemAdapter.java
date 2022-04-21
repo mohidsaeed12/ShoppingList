@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -47,14 +48,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView tv_itemName;
         private final TextView tv_amount;
+        private final CheckBox cb_itemObtained;
         private final ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_itemName = itemView.findViewById(R.id.tv_itemName);
             tv_amount = itemView.findViewById(R.id.tv_itemAmount);
-            parentLayout = itemView.findViewById(R.id.layout_items);
+            cb_itemObtained=itemView.findViewById(R.id.cb_itemObtained);
 
+            parentLayout = itemView.findViewById(R.id.layout_items);
         }
     }
 
@@ -73,7 +76,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
         holder.tv_itemName.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
         holder.tv_amount.setText(Integer.toString(items.get(position).getItemQuantity()));
         holder.tv_amount.setTextColor(Integer.decode(items.get(position).getItemCategory().getTextColor()) + 0xFF000000);
+        holder.cb_itemObtained.setChecked(items.get(position).getItemObtained());
         holder.parentLayout.setBackgroundColor(Integer.decode(items.get(position).getItemCategory().getBackgroundColor()) + 0xFF000000);
+
+        holder.cb_itemObtained.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                DatabaseHelper db = new DatabaseHelper(context);
+                items.get(position).setItemObtained(items.get(position).getItemObtained()==false);
+                db.updateOne(items.get(position),items.get(position));
+                ListsActivity.setAdapter(ListsActivity.recyclerView, context);
+                notifyDataSetChanged();
+            }
+        });
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,9 +145,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
                 int quant;
                 name = (input1.getText().toString().equals(""))? item.getItemName() : input1.getText().toString();
                 quant= (input2.getText().toString().equals(""))? item.getItemQuantity() : Integer.decode(input2.getText().toString()).intValue();
-                Item newItem = new Item(name,quant ,ListsActivity.categories.get(position), item.getListID());
+                Item newItem = new Item(name,quant,item.getItemObtained() ,ListsActivity.categories.get(position), item.getListID());
                 db.updateOne(item, newItem);
                 ListsActivity.setAdapter(ListsActivity.recyclerView, context);
+                notifyDataSetChanged();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -22,12 +22,23 @@
         android:id="@+id/tv_itemAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="16dp"
+        android:text="Amount"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/cb_itemObtained"
+        app:layout_constraintTop_toTopOf="@+id/tv_itemName" />
+
+    <CheckBox
+        android:id="@+id/cb_itemObtained"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="Ammount"
-        android:textSize="20sp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_itemName" />
+        app:layout_constraintTop_toTopOf="parent"
+         />
 
     <View
         android:id="@+id/divider4"
@@ -38,4 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_itemName" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

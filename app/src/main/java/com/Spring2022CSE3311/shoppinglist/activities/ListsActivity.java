@@ -123,7 +123,7 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
                             if(!input2.getText().toString().isEmpty()&&Integer.decode(input2.getText().toString()).intValue()>0) {
                                 temp = Integer.decode(input2.getText().toString()).intValue();
                             }
-                            Item newItem = new Item(input1.getText().toString(), temp, categories.get(position), list.getId());
+                            Item newItem = new Item(input1.getText().toString(), temp, false, categories.get(position), list.getId());
                             db.addOne(newItem);
                             itemAdapter.notifyDataSetChanged();
                             setAdapter(recyclerView, context);
