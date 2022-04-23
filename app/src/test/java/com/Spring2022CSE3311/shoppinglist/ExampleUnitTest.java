@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.Spring2022CSE3311.shoppinglist;
 
 import org.junit.Test;
 

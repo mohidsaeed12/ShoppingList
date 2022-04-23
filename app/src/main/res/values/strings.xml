@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">ShoppingList</string>
+    <string name="home">Home</string>
+    <string name="Unexpected_val">\"Unexpected value: \"</string>
+    <string name="categories">Categories</string>
+    <string name="shopping_lists">Shopping lists</string>
+    <string name="clickToReturn">Return</string>
+
+    <string-array name="color_names">
+        <item>Red theme</item>
+        <item>Green theme</item>
+        <item>Blue theme</item>
+        <item>Orange theme</item>
+        <item>Yellow theme</item>
+        <item>Purple theme</item>
+        <item>Pink theme</item>
+    </string-array>
+
+    <string-array name="color_values">
+        <item name ="Red theme">#FF6666 #AA0000</item>
+        <item name ="Green theme">#BBF0BB #00AA00</item>
+        <item name ="Blue theme">#AAAAF0 #0000FF</item>
+        <item name ="Orange theme">#FFA75D #C05000</item>
+        <item name ="Yellow theme">#FFFF20 #A0A000</item>
+        <item name ="Purple theme">#A545FF #3D155F</item>
+        <item name ="Pink theme">#FF80FF #C000C0</item>
+    </string-array>
 </resources>

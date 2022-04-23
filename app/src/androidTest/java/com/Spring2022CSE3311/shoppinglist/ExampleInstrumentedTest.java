@@ -1,4 +1,4 @@
-package com.example.shoppinglist;
+package com.Spring2022CSE3311.shoppinglist;
 
 import android.content.Context;
 
