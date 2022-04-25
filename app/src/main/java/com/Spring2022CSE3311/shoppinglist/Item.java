@@ -22,6 +22,15 @@ public class Item {
         this.listID = listID;
     }
 
+    public Item(String itemName, boolean itemObtained, Category itemCategory, int listID) {
+        this();
+        this.itemName = itemName;
+        this.itemQuantity = 1;
+        this.itemObtained=itemObtained;
+        this.itemCategory = itemCategory;
+        this.listID = listID;
+    }
+
     public Item(int id, String itemName, int itemQuantity, boolean itemObtained, Category itemCategory, int listID) {
         this(itemName,itemQuantity, itemObtained ,itemCategory,listID);
         this.id = id;
