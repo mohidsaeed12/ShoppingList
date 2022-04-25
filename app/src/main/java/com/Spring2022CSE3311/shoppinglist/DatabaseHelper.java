@@ -1,4 +1,4 @@
-package com.Spring2022CSE3311.shoppinglist;
+    package com.Spring2022CSE3311.shoppinglist;
 
 import android.content.ContentValues;
 import android.content.Context;
