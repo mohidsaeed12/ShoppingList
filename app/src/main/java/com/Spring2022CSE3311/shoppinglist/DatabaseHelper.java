@@ -54,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         createTableStatement = "CREATE TABLE "                  + ITEM_TABLE  + "( " +
                                 COLUMN_ITEM_ID                  + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                                COLUMN_ITEM_NAME                + " TEXT UNIQUE,"    +
+                                COLUMN_ITEM_NAME                + " TEXT,"    +
                                 COLUMN_ITEM_QUANTITY            + " INTEGER," +
                                 COLUMN_ITEM_OBTAINED            + " BOOL," +
                                 COLUMN_CATEGORY_ID              + " INTEGER," +
@@ -94,6 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean deleteOne(SList list) {
         SQLiteDatabase db = this.getWritableDatabase();
         long deleted = db.delete(SHOPPINGLIST_TABLE, "COLUMN_SHOPPINGLIST_ID=?", new String[] {"" + list.getId()});
+        deleted += db.delete(ITEM_TABLE,"COLUMN_SHOPPINGLIST_ID=?", new String[] {"" + list.getId()});
         db.close();
         return deleted != -1;
     }
