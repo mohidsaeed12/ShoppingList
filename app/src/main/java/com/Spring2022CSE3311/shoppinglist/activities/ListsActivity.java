@@ -54,12 +54,14 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
 
-        getSupportActionBar().setTitle("Items Screen");
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             list = (SList) extras.getSerializable("List");
         }
+
+        getSupportActionBar().setTitle(list.getListName());
 
         listener = this;
 
